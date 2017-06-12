@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Moviebox</string>
+    <string name="error">An Error has occurred.</string>
+    <string name="action_popular">Popular</string>
+    <string name="action_top_rated">Top Rated</string>
+    <string name="image_description">Movie  Thumbnail</string>
+</resources>
