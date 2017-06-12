@@ -12,20 +12,19 @@ import java.net.URL;
 
 public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
 
-    private FetchMoviesCallback mDelegate;
+    private FetchMoviesCallback mCallback;
     private Context mContext;
     private String mMoviesChoice;
 
 
     public FetchMoviesTask(FetchMoviesCallback callback, Context context, String moviesChoice) {
-        this.mDelegate = callback;
+        this.mCallback = callback;
         this.mContext = context;
         this.mMoviesChoice = moviesChoice;
     }
 
     public interface FetchMoviesCallback {
         void toggleLoadingIndicator(boolean onOffSwitch);
-
         void onTaskCompleted(Movie[] movies);
     }
 
@@ -33,14 +32,14 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
     public Loader<Movie[]> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<Movie[]>(mContext) {
 
-            Movie[] mMovieData = null;
+            Movie[] movieData = null;
 
             @Override
             protected void onStartLoading() {
-                if (mMovieData != null) {
-                    deliverResult(mMovieData);
+                if (movieData != null) {
+                    deliverResult(movieData);
                 } else {
-                    mDelegate.toggleLoadingIndicator(true);
+                    mCallback.toggleLoadingIndicator(true);
                     forceLoad();
                 }
             }
@@ -52,7 +51,7 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
                 try {
                     String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
 
-                    Movie[] movieData = OpenMovieJsonUtils.getMovieObjectsFromJson(jsonMovieResponse);
+                    Movie[] movieData = OpenJsonUtils.getMovieObjectsFromJson(jsonMovieResponse);
 
                     return movieData;
 
@@ -64,7 +63,7 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
             }
 
             public void deliverResult(Movie[] data) {
-                mMovieData = data;
+                movieData = data;
                 super.deliverResult(data);
             }
         };
@@ -73,7 +72,7 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
 
     @Override
     public void onLoadFinished(Loader<Movie[]> loader, Movie[] data) {
-        mDelegate.onTaskCompleted(data);
+        mCallback.onTaskCompleted(data);
     }
 
     @Override

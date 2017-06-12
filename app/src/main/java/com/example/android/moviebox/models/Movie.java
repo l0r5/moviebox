@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class Movie implements Parcelable {
 
-    private long mId;
+    private String mId;
     private String mTitle;
     private String mReleaseDate;
     private String mRating;
@@ -19,7 +19,7 @@ public class Movie implements Parcelable {
     private String mTrailerUrlStr;
 
 
-    public Movie(long id, String title, URL thumbnailUrl, String releaseDate, String rating, String description) {
+    public Movie(String id, String title, URL thumbnailUrl, String releaseDate, String rating, String description) {
         mId = id;
         mTitle = title;
         mThumbnailUrlStr = thumbnailUrl.toString();
@@ -29,7 +29,7 @@ public class Movie implements Parcelable {
     }
 
     /** getter */
-    public long getId() {
+    public String getId() {
         return mId;
     }
 
@@ -56,7 +56,7 @@ public class Movie implements Parcelable {
 
     /** Parcelable */
     private Movie(Parcel in) {
-        mId = in.readLong();
+        mId = in.readString();
         mTitle = in.readString();
         mThumbnailUrlStr = in.readString();
         mReleaseDate = in.readString();
@@ -71,7 +71,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeLong(mId);
+        out.writeString(mId);
         out.writeString(mTitle);
         out.writeString(mThumbnailUrlStr);
         out.writeString(mReleaseDate);

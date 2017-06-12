@@ -21,11 +21,14 @@ public final class NetworkUtils {
     private static final String MOVIE_PATH = "movie";
     private static final String POPULAR_PATH = "popular";
     private static final String TOP_RATED_PATH ="top_rated";
-    private static final String API_KEY_PARAM ="api_key";
+    private static final String API_KEY_PARAM = "api_key";
     private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p";
     private static final String IMAGE_SIZE_PATH = "w185";
     private static final String VIDEOS_PATH = "videos";
     private static final String REVIEWS_PATH = "reviews";
+    private static final String YOUTUBE_BASE_URL = "https://www.youtube.com";
+    private static final String YOUTUBE_WATCH_PATH ="watch";
+    private static final String YOUTUBE_VIDEO_KEY_PARAM = "v";
 
     static URL buildUrl (Context context, String moviesChoice) {
 
@@ -108,7 +111,7 @@ public final class NetworkUtils {
         Uri builtUri = Uri.parse(THEMOVIEDB_BASE_URL).buildUpon()
                 .appendPath(MOVIE_PATH)
                 .appendPath(movieId)
-                .appendPath(VIDEOS_PATH)
+                .appendPath(REVIEWS_PATH)
                 .appendQueryParameter(API_KEY_PARAM, apiKey)
                 .build();
 
@@ -120,6 +123,26 @@ public final class NetworkUtils {
                 e.printStackTrace();
             }
         }
+        return url;
+    }
+
+    static URL buildYoutubeTrailerUrl(String key) {
+
+        URL url = null;
+
+        Uri builtUri = Uri.parse(YOUTUBE_BASE_URL).buildUpon()
+                .appendPath(YOUTUBE_WATCH_PATH)
+                .appendQueryParameter(YOUTUBE_VIDEO_KEY_PARAM, key)
+                .build();
+        if(builtUri!=null) {
+            try {
+                url = new URL(builtUri.toString());
+                Log.v(TAG, "Built YouTube URL: " + url);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+
         return url;
     }
 

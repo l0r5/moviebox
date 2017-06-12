@@ -11,10 +11,8 @@ public class MoviesContract {
         public static final String COLUMN_RELEASE_DATE = "release_date";
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_DESCRIPTION = "description";
-        public static final String COLUMN_REVIEW = "review";
         public static final String COLUMN_FAVORITE = "favorite";
         public static final String COLUMN_THUMBNAIL_URL = "thumbnail_url";
-        public static final String COLUMN_TRAILER_URL = "trailer_url";
 
     }
 }
