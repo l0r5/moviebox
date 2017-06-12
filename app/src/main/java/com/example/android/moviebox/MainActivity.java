@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
         }
     }
 
+
     /** AsyncTaskLoader Callback */
     public void onTaskCompleted(Movie[] movieData) {
         toggleLoadingIndicator(false);

@@ -1,6 +1,9 @@
 package com.example.android.moviebox.utilities;
 
 
+import android.content.ContentValues;
+
+import com.example.android.moviebox.data.MoviesContract;
 import com.example.android.moviebox.models.Movie;
 import com.example.android.moviebox.models.Review;
 import com.example.android.moviebox.models.Trailer;
@@ -12,7 +15,7 @@ import org.json.JSONObject;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-final class OpenJsonUtils {
+final class DataFormatUtils {
 
     static Movie[] getMovieObjectsFromJson(String movieJsonString) throws JSONException {
 
@@ -163,5 +166,18 @@ final class OpenJsonUtils {
 
         return parsedReviewData;
     }
+
+    static ContentValues createMovieContentValues(Movie movie) {
+        ContentValues movieValues = new ContentValues();
+        movieValues.put(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID, movie.getId());
+        movieValues.put(MoviesContract.MoviesEntry.COLUMN_TITLE, movie.getTitle());
+        movieValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+        movieValues.put(MoviesContract.MoviesEntry.COLUMN_RATING, movie.getRating());
+        movieValues.put(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION, movie.getDescription());
+        movieValues.put(MoviesContract.MoviesEntry.COLUMN_FAVORITE, movie.getFavorite());
+        movieValues.put(MoviesContract.MoviesEntry.COLUMN_THUMBNAIL_URL, movie.getThumbnailUrlStr());
+        return movieValues;
+    }
+
 
 }

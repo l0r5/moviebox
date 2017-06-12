@@ -13,10 +13,8 @@ public class Movie implements Parcelable {
     private String mReleaseDate;
     private String mRating;
     private String mDescription;
-    private String mReview;
-    private Boolean mFavorite;
+    private int mFavorite; //values can be 0 (false) and 1 (true)
     private String mThumbnailUrlStr;
-    private String mTrailerUrlStr;
 
 
     public Movie(String id, String title, URL thumbnailUrl, String releaseDate, String rating, String description) {
@@ -26,6 +24,7 @@ public class Movie implements Parcelable {
         mReleaseDate = releaseDate;
         mRating = rating;
         mDescription = description;
+        mFavorite = 0;
     }
 
     /** getter */
@@ -49,6 +48,10 @@ public class Movie implements Parcelable {
         return mRating;
     }
 
+    public int getFavorite() {
+        return mFavorite;
+    }
+
     public String getDescription() {
         return mDescription;
     }
@@ -62,6 +65,7 @@ public class Movie implements Parcelable {
         mReleaseDate = in.readString();
         mRating = in.readString();
         mDescription = in.readString();
+        mFavorite = in.readInt();
     }
 
     @Override
@@ -77,6 +81,7 @@ public class Movie implements Parcelable {
         out.writeString(mReleaseDate);
         out.writeString(mRating);
         out.writeString(mDescription);
+        out.writeInt(mFavorite);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR

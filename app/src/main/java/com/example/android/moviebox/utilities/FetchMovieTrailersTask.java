@@ -50,7 +50,7 @@ public class FetchMovieTrailersTask implements LoaderManager.LoaderCallbacks<Tra
                 try {
                     String jsonTrailerResponse = NetworkUtils.getResponseFromHttpUrl(trailerRequestUrl);
 
-                    Trailer[] trailerData = OpenJsonUtils.getTrailerObjectsFromJson(jsonTrailerResponse);
+                    Trailer[] trailerData = DataFormatUtils.getTrailerObjectsFromJson(jsonTrailerResponse);
 
                     return trailerData;
 

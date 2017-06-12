@@ -38,7 +38,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:minHeight="1000dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -66,14 +67,23 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
-                        android:textSize="28sp" />
+                        android:textSize="24sp" />
 
                     <TextView
                         android:id="@+id/tv_movie_detail_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/standardMargin"
                         android:layout_gravity="start"
                         android:textSize="20sp" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/standardMargin"
+                        android:text="@string/like"
+                        android:background="@color/colorAccent"
+                        android:textColor="@color/colorWhite"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -97,6 +107,30 @@
                     android:layout_height="2dp"
                     android:background="#c0c0c0"
                     android:padding="12dp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </ListView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </ListView>
 
             </LinearLayout>
         </LinearLayout>

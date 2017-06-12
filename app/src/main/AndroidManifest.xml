@@ -27,6 +27,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+        <!--The manifest entry for the Movie Provider-->
+        <provider
+            android:name=".data.MoviesProvider"
+            android:authorities="@string/content_authority"
+            android:exported="false"/>
+
     </application>
+
 
 </manifest>

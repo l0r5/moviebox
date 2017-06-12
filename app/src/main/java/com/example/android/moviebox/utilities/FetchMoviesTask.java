@@ -1,30 +1,35 @@
 package com.example.android.moviebox.utilities;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 
+import com.example.android.moviebox.data.MoviesContract;
 import com.example.android.moviebox.models.Movie;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
 
-    private FetchMoviesCallback mCallback;
+    private FetchMoviesCallback mDelegate;
     private Context mContext;
     private String mMoviesChoice;
 
 
     public FetchMoviesTask(FetchMoviesCallback callback, Context context, String moviesChoice) {
-        this.mCallback = callback;
+        this.mDelegate = callback;
         this.mContext = context;
         this.mMoviesChoice = moviesChoice;
     }
 
     public interface FetchMoviesCallback {
         void toggleLoadingIndicator(boolean onOffSwitch);
+
         void onTaskCompleted(Movie[] movies);
     }
 
@@ -39,7 +44,7 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
                 if (movieData != null) {
                     deliverResult(movieData);
                 } else {
-                    mCallback.toggleLoadingIndicator(true);
+                    mDelegate.toggleLoadingIndicator(true);
                     forceLoad();
                 }
             }
@@ -51,7 +56,7 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
                 try {
                     String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
 
-                    Movie[] movieData = OpenJsonUtils.getMovieObjectsFromJson(jsonMovieResponse);
+                    Movie[] movieData = DataFormatUtils.getMovieObjectsFromJson(jsonMovieResponse);
 
                     return movieData;
 
@@ -72,7 +77,17 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
 
     @Override
     public void onLoadFinished(Loader<Movie[]> loader, Movie[] data) {
-        mCallback.onTaskCompleted(data);
+        mDelegate.onTaskCompleted(data);
+
+        List<ContentValues> movieValues = new ArrayList<ContentValues>();
+        for(Movie movie:data) {
+            movieValues.add(DataFormatUtils.createMovieContentValues(movie));
+        }
+
+        mContext.getContentResolver().bulkInsert(
+                MoviesContract.MoviesEntry.CONTENT_URI,
+                movieValues.toArray(new ContentValues[movieValues.size()]));
+
     }
 
     @Override

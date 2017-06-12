@@ -53,7 +53,7 @@ public class FetchMovieReviewsTask implements LoaderManager.LoaderCallbacks<Revi
                 try {
                     String jsonReviewResponse = NetworkUtils.getResponseFromHttpUrl(reviewRequestUrl);
 
-                    Review[] reviewData = OpenJsonUtils.getReviewObjectsFromJson(jsonReviewResponse);
+                    Review[] reviewData = DataFormatUtils.getReviewObjectsFromJson(jsonReviewResponse);
 
                     return reviewData;
 
