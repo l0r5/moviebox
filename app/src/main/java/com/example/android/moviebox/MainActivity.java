@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
+import android.databinding.DataBindingComponent;
+import android.databinding.DataBindingUtil;
 import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.moviebox.databinding.ActivityMovielistBinding;
 import com.example.android.moviebox.models.Movie;
 import com.example.android.moviebox.utilities.FetchMoviesTask;
 import com.example.android.moviebox.utilities.NetworkUtils;
@@ -27,32 +30,26 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
     private static final int FETCH_MOVIES_LOADER_ID = 0;
     private static final String POPULAR_MOVIES = NetworkUtils.getPopularPath();
     private static final String TOP_RATED_MOVIES = NetworkUtils.getTopRatedPath();
-    private ProgressBar mLoadingIndicator;
-    private RecyclerView mRecyclerView;
     private MovieListAdapter mMovieListAdapter;
-    private TextView mErrorMessageDisplay;
     private boolean mFirstMovieFetch = true;
+    ActivityMovielistBinding mBinding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movielist);
-
-        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movielist);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_movielist);
 
         if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            mBinding.recyclerViewMovielist.setLayoutManager(new GridLayoutManager(this, 2));
         }
         else{
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+            mBinding.recyclerViewMovielist.setLayoutManager(new GridLayoutManager(this, 4));
         }
 
-        mRecyclerView.setHasFixedSize(true);
+        mBinding.recyclerViewMovielist.setHasFixedSize(true);
         mMovieListAdapter = new MovieListAdapter(this);
-        mRecyclerView.setAdapter(mMovieListAdapter);
-
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        mBinding.recyclerViewMovielist.setAdapter(mMovieListAdapter);
 
         loadMovieData(POPULAR_MOVIES);
     }
@@ -104,20 +101,20 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
 
     /** Activity related Methods */
     private void showMovieDataView() {
-        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+        mBinding.textViewErrorMessage.setVisibility(View.INVISIBLE);
+        mBinding.recyclerViewMovielist.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage() {
-        mRecyclerView.setVisibility(View.INVISIBLE);
-        mErrorMessageDisplay.setVisibility(View.VISIBLE);
+        mBinding.recyclerViewMovielist.setVisibility(View.INVISIBLE);
+        mBinding.textViewErrorMessage.setVisibility(View.VISIBLE);
     }
 
     public void toggleLoadingIndicator(boolean onOffSwitch) {
         if(onOffSwitch) {
-            mLoadingIndicator.setVisibility(View.VISIBLE);
+            mBinding.progressBarLoadingIndicator.setVisibility(View.VISIBLE);
         } else {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            mBinding.progressBarLoadingIndicator.setVisibility(View.INVISIBLE);
         }
     }
 

@@ -30,7 +30,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
         public MovieListAdapterViewHolder (View view) {
             super(view);
-            mMovieDataImageView = (ImageView) view.findViewById(R.id.iv_movie_data);
+            mMovieDataImageView = (ImageView) view.findViewById(R.id.image_view_movie_data);
             view.setOnClickListener(this);
         }
 

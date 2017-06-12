@@ -1,6 +1,7 @@
 package com.example.android.moviebox;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.LoaderManager;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.moviebox.databinding.MovieDetailBinding;
 import com.example.android.moviebox.models.Movie;
 import com.example.android.moviebox.models.Review;
 import com.example.android.moviebox.models.Trailer;
@@ -19,6 +21,7 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
 
     private static final int FETCH_TRAILERS_LOADER_ID = 1;
     private static final int FETCH_REVIEWS_LOADER_ID = 2;
+    MovieDetailBinding mBinding;
     private Movie mMovieDetails;
     private Review mMovieReviews;
     private Trailer mMovieTrailers;
@@ -27,24 +30,18 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.movie_detail);
-
-        ImageView thumbnail = (ImageView) findViewById(R.id.iv_detail_thumbnail);
-        TextView movieReleaseDateTextView = (TextView) findViewById(R.id.tv_movie_detail_release_date);
-        TextView ratingTextView = (TextView) findViewById(R.id.tv_movie_detail_rating);
-        TextView descriptionTextView = (TextView) findViewById(R.id.tv_movie_detail_description);
-        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_movie_detail_title);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.movie_detail);
 
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity.getExtras() != null) {
             mMovieDetails = intentThatStartedThisActivity.getParcelableExtra("movieDetailData");
-            collapsingToolbar.setTitle(mMovieDetails.getTitle());
-            collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedToolbar);
-            collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedToolbar);
-            Picasso.with(thumbnail.getContext()).load(mMovieDetails.getThumbnailUrlStr()).into(thumbnail);
-            movieReleaseDateTextView.setText(mMovieDetails.getReleaseDate());
-            ratingTextView.setText(mMovieDetails.getRating());
-            descriptionTextView.setText(mMovieDetails.getDescription());
+            mBinding.collapsingToolbarMovieDetailTitle.setTitle(mMovieDetails.getTitle());
+            mBinding.collapsingToolbarMovieDetailTitle.setExpandedTitleTextAppearance(R.style.ExpandedToolbar);
+            mBinding.collapsingToolbarMovieDetailTitle.setCollapsedTitleTextAppearance(R.style.CollapsedToolbar);
+            Picasso.with(mBinding.imageViewDetailThumbnail.getContext()).load(mMovieDetails.getThumbnailUrlStr()).into(mBinding.imageViewDetailThumbnail);
+            mBinding.textViewMovieDetailReleaseDate.setText(mMovieDetails.getReleaseDate());
+            mBinding.textViewMovieDetailRating.setText(mMovieDetails.getRating());
+            mBinding.textViewMovieDetailDescription.setText(mMovieDetails.getDescription());
             loadDetailData(mMovieDetails.getId());
         }
     }
