@@ -1,10 +1,12 @@
 package com.example.android.moviebox.utilities;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
 import com.example.android.moviebox.R;
+import com.example.android.moviebox.models.Movie;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -172,4 +174,5 @@ public final class NetworkUtils {
     public static String getTopRatedPath() {
         return TOP_RATED_PATH;
     }
+    
 }

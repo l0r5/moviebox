@@ -27,7 +27,19 @@ public class Movie implements Parcelable {
         mFavorite = 0;
     }
 
-    /** getter */
+    public Movie(String id, String title, String thumbnailUrl, String releaseDate, String rating, String description, int favorite) {
+        mId = id;
+        mTitle = title;
+        mThumbnailUrlStr = thumbnailUrl;
+        mReleaseDate = releaseDate;
+        mRating = rating;
+        mDescription = description;
+        mFavorite = favorite;
+    }
+
+    /**
+     * getter
+     */
     public String getId() {
         return mId;
     }
@@ -56,8 +68,16 @@ public class Movie implements Parcelable {
         return mDescription;
     }
 
+    /**
+     * setter
+     */
+    public void setFavorite(int newFavorite) {
+        mFavorite = newFavorite;
+    }
 
-    /** Parcelable */
+    /**
+     * Parcelable
+     */
     private Movie(Parcel in) {
         mId = in.readString();
         mTitle = in.readString();

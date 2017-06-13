@@ -2,6 +2,7 @@ package com.example.android.moviebox.utilities;
 
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.example.android.moviebox.data.MoviesContract;
 import com.example.android.moviebox.models.Movie;
@@ -15,8 +16,11 @@ import org.json.JSONObject;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-final class DataFormatUtils {
+public final class DataFormatUtils {
 
+    /**
+     * Builds Movie Objects from JSON
+     */
     static Movie[] getMovieObjectsFromJson(String movieJsonString) throws JSONException {
 
         final String TMDB_RESULTS = "results";
@@ -32,7 +36,7 @@ final class DataFormatUtils {
         Movie[] parsedMovieData = new Movie[jsonMovieArray.length()];
 
         // build movie objects array
-        for(int i = 0; i < jsonMovieArray.length(); i++) {
+        for (int i = 0; i < jsonMovieArray.length(); i++) {
 
             String id;
             String title;
@@ -63,7 +67,9 @@ final class DataFormatUtils {
         return parsedMovieData;
     }
 
-
+    /**
+     * Builds Trailer Objects from JSON
+     */
     static Trailer[] getTrailerObjectsFromJson(String trailerJsonString) throws JSONException {
 
 
@@ -83,7 +89,7 @@ final class DataFormatUtils {
         Trailer[] parsedTrailerData = new Trailer[jsonTrailerArray.length()];
 
         // build trailer objects array
-        for(int i = 0; i < jsonTrailerArray.length(); i++) {
+        for (int i = 0; i < jsonTrailerArray.length(); i++) {
 
             String id;
             String iso6391;
@@ -108,7 +114,7 @@ final class DataFormatUtils {
             type = results.getString(TMDB_TYPE);
 
             //build youtube url
-            if(site.equals("YouTube")) {
+            if (site.equals("YouTube")) {
                 youtubeUrl = NetworkUtils.buildYoutubeTrailerUrl(key);
             } else {
                 youtubeUrl = null;
@@ -123,6 +129,9 @@ final class DataFormatUtils {
         return parsedTrailerData;
     }
 
+    /**
+     * Builds Review Objects from JSON
+     */
     static Review[] getReviewObjectsFromJson(String reviewJsonString) throws JSONException {
 
 
@@ -138,7 +147,7 @@ final class DataFormatUtils {
         Review[] parsedReviewData = new Review[jsonReviewArray.length()];
 
         // build review objects array
-        for(int i = 0; i < jsonReviewArray.length(); i++) {
+        for (int i = 0; i < jsonReviewArray.length(); i++) {
 
             String id;
             String author;
@@ -167,7 +176,10 @@ final class DataFormatUtils {
         return parsedReviewData;
     }
 
-    static ContentValues createMovieContentValues(Movie movie) {
+    /**
+     * Builds Content Value Object from Movie
+     */
+    static ContentValues getContentValuesFromMovie(Movie movie) {
         ContentValues movieValues = new ContentValues();
         movieValues.put(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID, movie.getId());
         movieValues.put(MoviesContract.MoviesEntry.COLUMN_TITLE, movie.getTitle());
@@ -179,5 +191,18 @@ final class DataFormatUtils {
         return movieValues;
     }
 
-
+    /**
+     * Builds Movie Object from Cursor
+     */
+    public static Movie getMovieFromCursor(Cursor cursor) {
+        return new Movie(
+                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID)),
+                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TITLE)),
+                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_THUMBNAIL_URL)),
+                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE)),
+                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RATING)),
+                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION)),
+                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_FAVORITE))
+        );
+    }
 }

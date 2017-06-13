@@ -16,13 +16,13 @@ import java.util.List;
 
 public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
 
-    private FetchMoviesCallback mDelegate;
+    private FetchMoviesCallback mCallback;
     private Context mContext;
     private String mMoviesChoice;
 
 
     public FetchMoviesTask(FetchMoviesCallback callback, Context context, String moviesChoice) {
-        this.mDelegate = callback;
+        this.mCallback = callback;
         this.mContext = context;
         this.mMoviesChoice = moviesChoice;
     }
@@ -44,7 +44,7 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
                 if (movieData != null) {
                     deliverResult(movieData);
                 } else {
-                    mDelegate.toggleLoadingIndicator(true);
+                    mCallback.toggleLoadingIndicator(true);
                     forceLoad();
                 }
             }
@@ -77,11 +77,11 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
 
     @Override
     public void onLoadFinished(Loader<Movie[]> loader, Movie[] data) {
-        mDelegate.onTaskCompleted(data);
+        mCallback.onTaskCompleted(data);
 
         List<ContentValues> movieValues = new ArrayList<ContentValues>();
         for(Movie movie:data) {
-            movieValues.add(DataFormatUtils.createMovieContentValues(movie));
+            movieValues.add(DataFormatUtils.getContentValuesFromMovie(movie));
         }
 
         mContext.getContentResolver().bulkInsert(
@@ -94,4 +94,5 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
     public void onLoaderReset(Loader<Movie[]> loader) {
 
     }
+
 }

@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 public class MoviesProvider extends ContentProvider {
 
     public static final int CODE_MOVIES= 100;
+    public static final int CODE_MOVIE_WITH_ID= 101;
 
     private MoviesDbHelper mMovieDbHelper;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -22,6 +23,9 @@ public class MoviesProvider extends ContentProvider {
         final String authority = MoviesContract.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, MoviesContract.PATH_MOVIES, CODE_MOVIES);
+
+        matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/#", CODE_MOVIE_WITH_ID);
+
         return matcher;
     }
 
@@ -66,7 +70,44 @@ public class MoviesProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        return null;
+        final SQLiteDatabase db = mMovieDbHelper.getReadableDatabase();
+
+        int match = sUriMatcher.match(uri);
+        Cursor retCursor;
+
+        switch(match) {
+            case CODE_MOVIES:
+                retCursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case CODE_MOVIE_WITH_ID:
+                String movieId = uri.getLastPathSegment();
+
+                String mSelection = "movie_id=?";
+                String[] mSelectionArgs = new String[]{movieId};
+
+                retCursor = db.query(
+                        MoviesContract.MoviesEntry.TABLE_NAME,
+                        projection,
+                        mSelection,
+                        mSelectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknow uri: " + uri);
+        }
+
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return retCursor;
+
     }
 
     @Nullable
@@ -88,7 +129,32 @@ public class MoviesProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = mMovieDbHelper.getWritableDatabase();
+
+        int rowsUpdated = 0;
+        int match = sUriMatcher.match(uri);
+        Cursor retCursor;
+
+        switch(match) {
+            case CODE_MOVIE_WITH_ID:
+                String movieId = uri.getLastPathSegment();
+
+                String mSelection = "movie_id=?";
+                String[] mSelectionArgs = new String[]{movieId};
+
+
+                db.update(
+                        MoviesContract.MoviesEntry.TABLE_NAME,
+                        values,
+                        mSelection,
+                        mSelectionArgs);
+
+                rowsUpdated++;
+
+                return rowsUpdated;
+            default:
+                throw new UnsupportedOperationException("Unknow uri: " + uri);
+        }
     }
 
 
