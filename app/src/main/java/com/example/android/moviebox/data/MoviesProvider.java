@@ -11,8 +11,8 @@ import android.support.annotation.Nullable;
 
 public class MoviesProvider extends ContentProvider {
 
-    public static final int CODE_MOVIES= 100;
     public static final int CODE_MOVIE_WITH_ID= 101;
+    public static final int CODE_FAVORITE_MOVIES = 200;
 
     private MoviesDbHelper mMovieDbHelper;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -22,7 +22,7 @@ public class MoviesProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MoviesContract.CONTENT_AUTHORITY;
 
-        matcher.addURI(authority, MoviesContract.PATH_MOVIES, CODE_MOVIES);
+        matcher.addURI(authority, MoviesContract.PATH_MOVIES, CODE_FAVORITE_MOVIES);
 
         matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/#", CODE_MOVIE_WITH_ID);
 
@@ -35,12 +35,22 @@ public class MoviesProvider extends ContentProvider {
         return true;
     }
 
+    public boolean checkIfDbIsEmpty() {
+        SQLiteDatabase db = mMovieDbHelper.getReadableDatabase();
+        String count = "SELECT count(*) FROM table";
+        Cursor cursor = db.rawQuery(count, null);
+        cursor.moveToFirst();
+        int itemCount = cursor.getInt(0);
+        cursor.close();
+        return (itemCount == 0);
+    }
+
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = mMovieDbHelper.getWritableDatabase();
 
         switch(sUriMatcher.match(uri)) {
-            case CODE_MOVIES:
+            case CODE_FAVORITE_MOVIES:
                 db.beginTransaction();
                 int rowsInserted = 0;
                 try {
@@ -76,26 +86,29 @@ public class MoviesProvider extends ContentProvider {
         Cursor retCursor;
 
         switch(match) {
-            case CODE_MOVIES:
-                retCursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder);
-                break;
             case CODE_MOVIE_WITH_ID:
                 String movieId = uri.getLastPathSegment();
-
-                String mSelection = "movie_id=?";
-                String[] mSelectionArgs = new String[]{movieId};
+                String selectionId = "movie_id=?";
+                String[] selectionIdArgs = new String[]{movieId};
 
                 retCursor = db.query(
                         MoviesContract.MoviesEntry.TABLE_NAME,
                         projection,
-                        mSelection,
-                        mSelectionArgs,
+                        selectionId,
+                        selectionIdArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case CODE_FAVORITE_MOVIES:
+                String selectionFavorite = "favorite=?";
+                String isFavorite = "1";
+                String[] selectionFavoriteArgs = new String[]{isFavorite};
+
+                retCursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
+                        projection,
+                        selectionFavorite,
+                        selectionFavoriteArgs,
                         null,
                         null,
                         sortOrder);
@@ -133,7 +146,6 @@ public class MoviesProvider extends ContentProvider {
 
         int rowsUpdated = 0;
         int match = sUriMatcher.match(uri);
-        Cursor retCursor;
 
         switch(match) {
             case CODE_MOVIE_WITH_ID:

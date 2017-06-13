@@ -11,33 +11,56 @@ import android.util.Log;
 
 import com.example.android.moviebox.data.MoviesContract;
 
+import static com.example.android.moviebox.DetailActivity.FETCH_MOVIE_DETAIL_LOADER_ID;
+import static com.example.android.moviebox.MainActivity.FETCH_FAVORITE_MOVIE_LOADER_ID;
+
 
 public class FetchFromDbTask implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = FetchFromDbTask.class.getSimpleName();
-    private FetchMovieFavoriteCallback mCallback;
+    private FetchMovieFromDbCallback mCallback;
     private Context mContext;
     private String mMovieId;
 
-    public FetchFromDbTask(FetchMovieFavoriteCallback callback, Context context, String mMovieId) {
+    public FetchFromDbTask(FetchMovieFromDbCallback callback, Context context, String mMovieId) {
         this.mCallback = callback;
         this.mContext = context;
         this.mMovieId = mMovieId;
     }
 
-    public interface FetchMovieFavoriteCallback {
+    public FetchFromDbTask(FetchMovieFromDbCallback callback, Context context) {
+        this.mCallback = callback;
+        this.mContext = context;
+    }
+
+    public interface FetchMovieFromDbCallback {
         void swapCursor(Cursor newCursor);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
 
+        final Uri uri;
+
+        switch (loaderId) {
+            case FETCH_FAVORITE_MOVIE_LOADER_ID:
+                uri = MoviesContract.MoviesEntry.CONTENT_URI;
+                break;
+            case FETCH_MOVIE_DETAIL_LOADER_ID:
+                uri = MoviesContract.MoviesEntry.CONTENT_URI.buildUpon()
+                        .appendPath(mMovieId)
+                        .build();
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknow loader id: " + loaderId);
+        }
 
         return new AsyncTaskLoader<Cursor>(mContext) {
             Cursor mMovieData;
+
             @Override
             protected void onStartLoading() {
-                if(mMovieData != null) {
+                if (mMovieData != null) {
                     deliverResult(mMovieData);
                 } else {
                     forceLoad();
@@ -46,16 +69,15 @@ public class FetchFromDbTask implements LoaderManager.LoaderCallbacks<Cursor> {
 
             @Override
             public Cursor loadInBackground() {
-                Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
-                uri = uri.buildUpon().appendPath(mMovieId).build();
+
                 try {
 
-                     return mContext.getContentResolver().query(
-                             uri,
-                             null,
-                             null,
-                             null,
-                             null);
+                    return mContext.getContentResolver().query(
+                            uri,
+                            null,
+                            null,
+                            null,
+                            null);
 
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to asynchronously load data.");

@@ -3,6 +3,8 @@ package com.example.android.moviebox.utilities;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.design.widget.TabLayout;
+import android.util.Log;
 
 import com.example.android.moviebox.data.MoviesContract;
 import com.example.android.moviebox.models.Movie;
@@ -15,6 +17,8 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class DataFormatUtils {
 
@@ -179,7 +183,7 @@ public final class DataFormatUtils {
     /**
      * Builds Content Value Object from Movie
      */
-    static ContentValues getContentValuesFromMovie(Movie movie) {
+    public static ContentValues getContentValuesFromMovie(Movie movie) {
         ContentValues movieValues = new ContentValues();
         movieValues.put(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID, movie.getId());
         movieValues.put(MoviesContract.MoviesEntry.COLUMN_TITLE, movie.getTitle());
@@ -204,5 +208,19 @@ public final class DataFormatUtils {
                 cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION)),
                 cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_FAVORITE))
         );
+    }
+
+    /**
+     * Builds Movie Array Object from Cursor
+     */
+    public static Movie[] getMoviesFromCursor(Cursor cursor) {
+        int numberOfMovies = cursor.getCount();
+        Movie[] movieData = new Movie[numberOfMovies];
+
+        for (int i = 0; i < numberOfMovies; i++) {
+            movieData[i] = getMovieFromCursor(cursor);
+        }
+
+        return movieData;
     }
 }

@@ -4,6 +4,7 @@
     <string name="error">An Error has occurred.</string>
     <string name="action_popular">Popular</string>
     <string name="action_top_rated">Top Rated</string>
+    <string name="action_favorite">Favorite</string>
     <string name="image_description">Movie  Thumbnail</string>
     <string name="favorite">👍 like</string>
     <string name="no_favorite">unlike</string>

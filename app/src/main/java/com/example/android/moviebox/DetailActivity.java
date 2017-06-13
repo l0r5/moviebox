@@ -22,21 +22,20 @@ import com.example.android.moviebox.utilities.FetchMovieReviewsTask;
 import com.example.android.moviebox.utilities.FetchMovieTrailersTask;
 import com.squareup.picasso.Picasso;
 
-public class DetailActivity extends MainActivity implements FetchMovieTrailersTask.FetchMovieTrailersCallback, FetchMovieReviewsTask.FetchMovieReviewsCallback, FetchFromDbTask.FetchMovieFavoriteCallback {
+public class DetailActivity extends MainActivity implements FetchMovieTrailersTask.FetchMovieTrailersCallback, FetchMovieReviewsTask.FetchMovieReviewsCallback, FetchFromDbTask.FetchMovieFromDbCallback {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
     private static final int FETCH_TRAILERS_LOADER_ID = 1;
     private static final int FETCH_REVIEWS_LOADER_ID = 2;
-    private static final int FETCH_MOVIE_DETAIL_LOADER_ID = 3;
+    public static final int FETCH_MOVIE_DETAIL_LOADER_ID = 3;
 
-    private static final int FAVORITE_BUTTON_NOT_FAVORITE = 0;
-    private static final int FAVORITE_BUTTON_FAVORITE = 1;
+    private static final int BUTTON_NOT_FAVORITE = 0;
+    private static final int BUTTON_FAVORITE = 1;
 
     MovieDetailBinding mBinding;
     private Movie mMovieDetails;
     private Review mMovieReviews;
     private Trailer mMovieTrailers;
-    Cursor mMovieDataCursor;
 
 
     @Override
@@ -76,11 +75,14 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
     private void setFavoriteButtonText() {
         int favoriteValue = mMovieDetails.getFavorite();
         switch (favoriteValue) {
-            case FAVORITE_BUTTON_NOT_FAVORITE:
+            case BUTTON_NOT_FAVORITE:
                 mBinding.buttonMovieDetailFavorite.setText(R.string.favorite);
                 break;
-            case FAVORITE_BUTTON_FAVORITE:
+            case BUTTON_FAVORITE:
                 mBinding.buttonMovieDetailFavorite.setText(R.string.no_favorite);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknow integer: " + favoriteValue);
         }
     }
 
@@ -95,17 +97,19 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
 
         switch (favoriteValue) {
             // Button will be set to Favorite
-            case FAVORITE_BUTTON_NOT_FAVORITE:
+            case BUTTON_NOT_FAVORITE:
                 Toast.makeText(this, "Marked as favorite", Toast.LENGTH_SHORT).show();
-                mMovieDetails.setFavorite(FAVORITE_BUTTON_FAVORITE);
-                cv.put(MoviesContract.MoviesEntry.COLUMN_FAVORITE, FAVORITE_BUTTON_FAVORITE);
+                mMovieDetails.setFavorite(BUTTON_FAVORITE);
+                cv.put(MoviesContract.MoviesEntry.COLUMN_FAVORITE, BUTTON_FAVORITE);
                 break;
             // Button will be set to non-Favorite
-            case FAVORITE_BUTTON_FAVORITE:
+            case BUTTON_FAVORITE:
                 Toast.makeText(this, "Marked as non-favorite", Toast.LENGTH_SHORT).show();
-                mMovieDetails.setFavorite(FAVORITE_BUTTON_NOT_FAVORITE);
-                cv.put(MoviesContract.MoviesEntry.COLUMN_FAVORITE, FAVORITE_BUTTON_NOT_FAVORITE);
+                mMovieDetails.setFavorite(BUTTON_NOT_FAVORITE);
+                cv.put(MoviesContract.MoviesEntry.COLUMN_FAVORITE, BUTTON_NOT_FAVORITE);
                 break;
+            default:
+                throw new UnsupportedOperationException("Unknow integer: " + favoriteValue);
         }
 
         setFavoriteButtonText();
@@ -153,10 +157,10 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
     /**
      * Swaps Cursor and updates values from db
      */
-    public void swapCursor(Cursor newCursor) {
-        if (newCursor != null && newCursor.moveToFirst()) {
-            mMovieDataCursor = newCursor;
-            mMovieDetails = DataFormatUtils.getMovieFromCursor(mMovieDataCursor);
+    public void swapCursor(Cursor cursor) {
+        if (cursor != null && cursor.moveToFirst()) {
+            mMovieDetails = DataFormatUtils.getMovieFromCursor(cursor);
+            cursor.close();
             setFavoriteButtonText();
         }
     }

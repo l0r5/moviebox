@@ -15,6 +15,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+import static com.example.android.moviebox.MainActivity.POPULAR_MOVIES;
+import static com.example.android.moviebox.MainActivity.TOP_RATED_MOVIES;
+
 
 public final class NetworkUtils {
 
@@ -167,12 +170,14 @@ public final class NetworkUtils {
         }
     }
 
-    public static String getPopularPath() {
-        return POPULAR_PATH;
+    public static String getPath(String selectedMovies) {
+        switch(selectedMovies) {
+            case POPULAR_MOVIES:
+                return POPULAR_PATH;
+            case TOP_RATED_MOVIES:
+                return TOP_RATED_PATH;
+            default:
+                throw new UnsupportedOperationException("Unknow string: " + selectedMovies);
+        }
     }
-
-    public static String getTopRatedPath() {
-        return TOP_RATED_PATH;
-    }
-    
 }

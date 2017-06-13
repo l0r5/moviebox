@@ -2,6 +2,7 @@ package com.example.android.moviebox.utilities;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -29,7 +30,6 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
 
     public interface FetchMoviesCallback {
         void toggleLoadingIndicator(boolean onOffSwitch);
-
         void onTaskCompleted(Movie[] movies);
     }
 
@@ -78,15 +78,6 @@ public class FetchMoviesTask implements LoaderManager.LoaderCallbacks<Movie[]> {
     @Override
     public void onLoadFinished(Loader<Movie[]> loader, Movie[] data) {
         mCallback.onTaskCompleted(data);
-
-        List<ContentValues> movieValues = new ArrayList<ContentValues>();
-        for(Movie movie:data) {
-            movieValues.add(DataFormatUtils.getContentValuesFromMovie(movie));
-        }
-
-        mContext.getContentResolver().bulkInsert(
-                MoviesContract.MoviesEntry.CONTENT_URI,
-                movieValues.toArray(new ContentValues[movieValues.size()]));
 
     }
 
