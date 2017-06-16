@@ -5,9 +5,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 
 import com.example.android.moviebox.data.MoviesContract;
 
@@ -47,52 +46,25 @@ public class FetchFromDbTask implements LoaderManager.LoaderCallbacks<Cursor> {
                 uri = MoviesContract.MoviesEntry.CONTENT_URI.buildUpon()
                         .appendPath(mMovieId)
                         .build();
-                break;
+
+                return new CursorLoader(mContext,
+                        uri,
+                        null,
+                        null,
+                        null,
+                        null);
+
             case FETCH_ALL_MOVIES_DB_LOADER_ID:
                 uri = MoviesContract.MoviesEntry.CONTENT_URI;
-                break;
+                return new CursorLoader(mContext,
+                        uri,
+                        null,
+                        null,
+                        null,
+                        null);
             default:
-                throw new UnsupportedOperationException("Unknow loader id: " + loaderId);
+                throw new RuntimeException("Loader Not Implemented: " + loaderId);
         }
-
-        return new AsyncTaskLoader<Cursor>(mContext) {
-            Cursor mMovieData;
-
-            @Override
-            protected void onStartLoading() {
-                if (mMovieData != null) {
-                    deliverResult(mMovieData);
-                } else {
-                    forceLoad();
-                }
-            }
-
-            @Override
-            public Cursor loadInBackground() {
-                try {
-                    return mContext.getContentResolver().query(
-                            uri,
-                            null,
-                            null,
-                            null,
-                            null);
-
-                } catch (Exception e) {
-                    Log.e(TAG, "Failed to asynchronously load data.");
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            @Override
-            public void deliverResult(Cursor data) {
-                if(data == null) {
-                    Log.d(TAG, "Data null");
-                }
-                mMovieData = data;
-                super.deliverResult(data);
-            }
-        };
     }
 
     @Override
@@ -102,7 +74,7 @@ public class FetchFromDbTask implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        mCallback.swapCursor(null);
     }
 
 
