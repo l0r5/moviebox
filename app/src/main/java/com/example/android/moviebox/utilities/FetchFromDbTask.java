@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.example.android.moviebox.data.MoviesContract;
 
-import static com.example.android.moviebox.DetailActivity.FETCH_MOVIE_DETAIL_LOADER_ID;
+import static com.example.android.moviebox.DetailActivity.FETCH_MOVIE_WITH_ID_LOADER_ID;
 import static com.example.android.moviebox.MainActivity.FETCH_FAVORITE_MOVIE_LOADER_ID;
 
 
@@ -43,10 +43,11 @@ public class FetchFromDbTask implements LoaderManager.LoaderCallbacks<Cursor> {
         final Uri uri;
 
         switch (loaderId) {
+
             case FETCH_FAVORITE_MOVIE_LOADER_ID:
                 uri = MoviesContract.MoviesEntry.CONTENT_URI;
                 break;
-            case FETCH_MOVIE_DETAIL_LOADER_ID:
+            case FETCH_MOVIE_WITH_ID_LOADER_ID:
                 uri = MoviesContract.MoviesEntry.CONTENT_URI.buildUpon()
                         .appendPath(mMovieId)
                         .build();

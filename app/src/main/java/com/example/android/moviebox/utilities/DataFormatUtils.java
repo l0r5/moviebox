@@ -25,7 +25,7 @@ public final class DataFormatUtils {
     /**
      * Builds Movie Objects from JSON
      */
-    static Movie[] getMovieObjectsFromJson(String movieJsonString) throws JSONException {
+    public static Movie[] getMovieObjectsFromJson(String movieJsonString) throws JSONException {
 
         final String TMDB_RESULTS = "results";
         final String TMDB_ID = "id";
@@ -74,7 +74,7 @@ public final class DataFormatUtils {
     /**
      * Builds Trailer Objects from JSON
      */
-    static Trailer[] getTrailerObjectsFromJson(String trailerJsonString) throws JSONException {
+    public static Trailer[] getTrailerObjectsFromJson(String trailerJsonString) throws JSONException {
 
 
         final String TMDB_RESULTS = "results";
@@ -136,7 +136,7 @@ public final class DataFormatUtils {
     /**
      * Builds Review Objects from JSON
      */
-    static Review[] getReviewObjectsFromJson(String reviewJsonString) throws JSONException {
+    public static Review[] getReviewObjectsFromJson(String reviewJsonString) throws JSONException {
 
 
         final String TMDB_RESULTS = "results";
@@ -195,6 +195,17 @@ public final class DataFormatUtils {
         return movieValues;
     }
 
+    public static ContentValues[] getContentValuesArrayFromMovieArray(Movie[] movieArray) {
+
+        ContentValues[] moviesContentValues = new ContentValues[movieArray.length];
+
+        for(int i = 0; i < movieArray.length; i++) {
+            moviesContentValues[i] = getContentValuesFromMovie(movieArray[i]);
+        }
+        return moviesContentValues;
+    }
+
+
     /**
      * Builds Movie Object from Cursor
      */
@@ -218,9 +229,17 @@ public final class DataFormatUtils {
         Movie[] movieData = new Movie[numberOfMovies];
 
         for (int i = 0; i < numberOfMovies; i++) {
-            movieData[i] = getMovieFromCursor(cursor);
+            movieData[i] = new Movie(
+                    cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID)),
+                    cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TITLE)),
+                    cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_THUMBNAIL_URL)),
+                    cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE)),
+                    cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RATING)),
+                    cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION)),
+                    cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_FAVORITE))
+            );
+            cursor.moveToNext();
         }
-
         return movieData;
     }
 }

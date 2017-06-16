@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.example.android.moviebox.data.MoviesContract;
 import com.example.android.moviebox.databinding.ActivityMovielistBinding;
 import com.example.android.moviebox.models.Movie;
+import com.example.android.moviebox.sync.SyncDbIntentService;
 import com.example.android.moviebox.utilities.DataFormatUtils;
 import com.example.android.moviebox.utilities.FetchFromDbTask;
 import com.example.android.moviebox.utilities.FetchMoviesTask;
@@ -39,10 +40,11 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
     public static final String TOP_RATED_MOVIES = "top_rated";
     private static final String FAVORITE_MOVIES = "favorite";
     private MovieListAdapter mMovieListAdapter;
-    private boolean mFirstMovieFetch = true;
+    private boolean mFirstMovieFetch = true; // TODO Raus damit!
     ActivityMovielistBinding mBinding;
 
     // TODO write service to keep db consistent and update ONLY missing movies
+    // TODO shared preference variable for like/unlike
 
 
     @Override
@@ -62,25 +64,35 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
         mBinding.recyclerViewMovielist.setAdapter(mMovieListAdapter);
 
         loadMovieData(POPULAR_MOVIES);
+        syncDb();
     }
 
 
-    /** Loading & Persisting Movies*/
+    /**
+     * Loading & Persisting Movies
+     */
     private void loadMovieData(String moviesChoice) {
         showMovieDataView();
+
         // Fetch data from the Internet
-        if (moviesChoice.equals(POPULAR_MOVIES) || (moviesChoice.equals(TOP_RATED_MOVIES))) {
-            LoaderManager.LoaderCallbacks<Movie[]> callback = new FetchMoviesTask(this, this, NetworkUtils.getPath(moviesChoice));
-            if(mFirstMovieFetch) {
-                getSupportLoaderManager().initLoader(FETCH_MOVIES_LOADER_ID, null, callback);
-            } else {
-                getSupportLoaderManager().restartLoader(FETCH_MOVIES_LOADER_ID, null, callback);
-            }
-        } // Fetch data from the db
-        else {
-            LoaderManager.LoaderCallbacks<Cursor> moviesCallback = new FetchFromDbTask(this, this);
-            getSupportLoaderManager().initLoader(FETCH_FAVORITE_MOVIE_LOADER_ID, null, moviesCallback);
-        }
+//        if (moviesChoice.equals(POPULAR_MOVIES) || (moviesChoice.equals(TOP_RATED_MOVIES))) {
+//            LoaderManager.LoaderCallbacks<Movie[]> callback = new FetchMoviesTask(this, this, NetworkUtils.getPath(moviesChoice));
+//            if(mFirstMovieFetch) {
+//                getSupportLoaderManager().initLoader(FETCH_MOVIES_LOADER_ID, null, callback);
+//            } else {
+//                getSupportLoaderManager().restartLoader(FETCH_MOVIES_LOADER_ID, null, callback);
+//            }
+//        } // Fetch data from the db
+//        else {
+//            LoaderManager.LoaderCallbacks<Cursor> moviesCallback = new FetchFromDbTask(this, this);
+//            getSupportLoaderManager().initLoader(FETCH_FAVORITE_MOVIE_LOADER_ID, null, moviesCallback);
+//        }
+    }
+
+    private void syncDb() {
+        Intent startSyncDbIntent = new Intent(this, SyncDbIntentService.class);
+        startSyncDbIntent.setAction(SyncDbIntentService.ACTION_SYNC_MOVIE_DB);
+        startService(startSyncDbIntent);
     }
 
     /**
@@ -116,7 +128,9 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
         return super.onOptionsItemSelected(item);
     }
 
-    /** Listeners & Implicit Intent*/
+    /**
+     * Listeners & Implicit Intent
+     */
     @Override
     public void onClick(Movie movieDetails) {
         Intent intentToStartActivity = new Intent(this, DetailActivity.class);
@@ -125,7 +139,9 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
     }
 
 
-    /** Activity related Methods */
+    /**
+     * Activity related Methods
+     */
     private void showMovieDataView() {
         mBinding.textViewErrorMessage.setVisibility(View.INVISIBLE);
         mBinding.recyclerViewMovielist.setVisibility(View.VISIBLE);
@@ -145,23 +161,34 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
     }
 
 
-    /** AsyncTaskLoader Callback */
+    /**
+     * AsyncTaskLoader Callback
+     */
     public void onTaskCompleted(Movie[] movieData) {
         toggleLoadingIndicator(false);
         if (movieData != null) {
+
+            // TODO Change this block
+            // Hier soll der DB Sync aufgerufen werden
+
+            String[] fetchedMovieIds = new String[movieData.length];
+
+
+            for(int i = 0; i < movieData.length; i++) {
+                fetchedMovieIds[i] = movieData[i].getId();
+            }
+
+
             if(mFirstMovieFetch) {
                 mFirstMovieFetch = false;
-                List<ContentValues> movieValues = new ArrayList<ContentValues>();
-                for(Movie movie:movieData) {
-                    movieValues.add(DataFormatUtils.getContentValuesFromMovie(movie));
-                }
-
-                getContentResolver().bulkInsert(
-                        MoviesContract.MoviesEntry.CONTENT_URI,
-                        movieValues.toArray(new ContentValues[movieValues.size()]));
             }
+
+
+
             showMovieDataView();
             mMovieListAdapter.setMovieData(movieData);
+
+
         } else {
             showErrorMessage();
         }

@@ -75,6 +75,15 @@ public class Movie implements Parcelable {
         mFavorite = newFavorite;
     }
 
+
+    public static Movie[] concatMovies(Movie[] moviesFirst, Movie[] moviesSecond) {
+        Movie[] combinedMovies = new Movie[moviesFirst.length + moviesSecond.length];
+        System.arraycopy(moviesFirst, 0, combinedMovies, 0, moviesFirst.length);
+        System.arraycopy(moviesSecond, 0, combinedMovies, moviesFirst.length, moviesSecond.length);
+        return combinedMovies;
+    }
+
+
     /**
      * Parcelable
      */
@@ -107,14 +116,12 @@ public class Movie implements Parcelable {
     public static final Parcelable.Creator<Movie> CREATOR
             = new Parcelable.Creator<Movie>() {
 
-        // This simply calls our new constructor (typically private) and
-        // passes along the unmarshalled `Parcel`, and then returns the new object!
+
         @Override
         public Movie createFromParcel(Parcel in) {
             return new Movie(in);
         }
 
-        // We just need to copy this and change the type to match our class.
         @Override
         public Movie[] newArray(int size) {
             return new Movie[size];

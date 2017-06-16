@@ -8,6 +8,7 @@ public class MoviesContract {
     public static final String CONTENT_AUTHORITY = "com.example.android.moviebox";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_MOVIES = "movies";
+    public static final String PATH_FAVORITE = "favorite";
 
 
     public static final class MoviesEntry implements BaseColumns {

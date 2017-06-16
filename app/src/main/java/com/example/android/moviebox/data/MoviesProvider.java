@@ -11,8 +11,9 @@ import android.support.annotation.Nullable;
 
 public class MoviesProvider extends ContentProvider {
 
+    public static final int CODE_ALL_MOVIES = 100;
     public static final int CODE_MOVIE_WITH_ID= 101;
-    public static final int CODE_FAVORITE_MOVIES = 200;
+    public static final int CODE_FAVORITE_MOVIES = 102;
 
     private MoviesDbHelper mMovieDbHelper;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -22,9 +23,9 @@ public class MoviesProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MoviesContract.CONTENT_AUTHORITY;
 
-        matcher.addURI(authority, MoviesContract.PATH_MOVIES, CODE_FAVORITE_MOVIES);
-
+        matcher.addURI(authority, MoviesContract.PATH_MOVIES, CODE_ALL_MOVIES);
         matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/#", CODE_MOVIE_WITH_ID);
+        matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/" + MoviesContract.PATH_FAVORITE, CODE_FAVORITE_MOVIES);
 
         return matcher;
     }
@@ -35,22 +36,12 @@ public class MoviesProvider extends ContentProvider {
         return true;
     }
 
-    public boolean checkIfDbIsEmpty() {
-        SQLiteDatabase db = mMovieDbHelper.getReadableDatabase();
-        String count = "SELECT count(*) FROM table";
-        Cursor cursor = db.rawQuery(count, null);
-        cursor.moveToFirst();
-        int itemCount = cursor.getInt(0);
-        cursor.close();
-        return (itemCount == 0);
-    }
-
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = mMovieDbHelper.getWritableDatabase();
 
         switch(sUriMatcher.match(uri)) {
-            case CODE_FAVORITE_MOVIES:
+            case CODE_ALL_MOVIES:
                 db.beginTransaction();
                 int rowsInserted = 0;
                 try {
@@ -86,6 +77,16 @@ public class MoviesProvider extends ContentProvider {
         Cursor retCursor;
 
         switch(match) {
+            case CODE_ALL_MOVIES:
+                retCursor = db.query(
+                        MoviesContract.MoviesEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
             case CODE_MOVIE_WITH_ID:
                 String movieId = uri.getLastPathSegment();
                 String selectionId = "movie_id=?";
@@ -136,7 +137,23 @@ public class MoviesProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
+
+        int numRowsDeleted;
+
+        switch (sUriMatcher.match(uri)) {
+
+            case CODE_ALL_MOVIES:
+                numRowsDeleted = mMovieDbHelper.getWritableDatabase().delete(
+                        MoviesContract.MoviesEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
         return 0;
     }
 

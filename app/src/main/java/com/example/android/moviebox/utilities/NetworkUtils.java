@@ -35,7 +35,7 @@ public final class NetworkUtils {
     private static final String YOUTUBE_WATCH_PATH ="watch";
     private static final String YOUTUBE_VIDEO_KEY_PARAM = "v";
 
-    static URL buildUrl (Context context, String moviesChoice) {
+    public static URL buildUrl (Context context, String moviesChoice) {
 
         Uri builtUri = null;
         URL url = null;
@@ -55,6 +55,8 @@ public final class NetworkUtils {
                     .build();
         }
 
+
+
         if(builtUri!=null) {
             try {
                 url = new URL(builtUri.toString());
@@ -67,7 +69,7 @@ public final class NetworkUtils {
         return url;
     }
 
-    static URL buildThumbnailUrl(String imagePath) {
+    public static URL buildThumbnailUrl(String imagePath) {
 
         URL url = null;
 
@@ -85,7 +87,7 @@ public final class NetworkUtils {
         return url;
     }
 
-    static URL buildTrailerUrl(Context context, String movieId) {
+    public static URL buildTrailerUrl(Context context, String movieId) {
 
         URL url = null;
         String apiKey = context.getString(R.string.THE_MOVIE_DB_API_KEY);
@@ -108,7 +110,7 @@ public final class NetworkUtils {
         return url;
     }
 
-    static URL buildReviewUrl(Context context, String movieId) {
+    public static URL buildReviewUrl(Context context, String movieId) {
 
         URL url = null;
         String apiKey = context.getString(R.string.THE_MOVIE_DB_API_KEY);
@@ -131,7 +133,7 @@ public final class NetworkUtils {
         return url;
     }
 
-    static URL buildYoutubeTrailerUrl(String key) {
+    public static URL buildYoutubeTrailerUrl(String key) {
 
         URL url = null;
 
@@ -151,7 +153,7 @@ public final class NetworkUtils {
         return url;
     }
 
-    static String getResponseFromHttpUrl(URL url) throws IOException {
+    public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             InputStream in = urlConnection.getInputStream();

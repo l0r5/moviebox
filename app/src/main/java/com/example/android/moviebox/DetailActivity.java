@@ -27,7 +27,7 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
     private static final String TAG = DetailActivity.class.getSimpleName();
     private static final int FETCH_TRAILERS_LOADER_ID = 1;
     private static final int FETCH_REVIEWS_LOADER_ID = 2;
-    public static final int FETCH_MOVIE_DETAIL_LOADER_ID = 3;
+    public static final int FETCH_MOVIE_WITH_ID_LOADER_ID = 3;
 
     private static final int BUTTON_NOT_FAVORITE = 0;
     private static final int BUTTON_FAVORITE = 1;
@@ -66,7 +66,7 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
     protected void onResume() {
         super.onResume();
         LoaderManager.LoaderCallbacks<Cursor> favoriteCallback = new FetchFromDbTask(this, this, mMovieDetails.getId());
-        getSupportLoaderManager().restartLoader(FETCH_MOVIE_DETAIL_LOADER_ID, null, favoriteCallback);
+        getSupportLoaderManager().restartLoader(FETCH_MOVIE_WITH_ID_LOADER_ID, null, favoriteCallback);
     }
 
     /**
@@ -127,7 +127,7 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
         LoaderManager.LoaderCallbacks<Cursor> favoriteCallback = new FetchFromDbTask(this, this, mMovieDetails.getId());
         getSupportLoaderManager().initLoader(FETCH_TRAILERS_LOADER_ID, null, trailerCallback);
         getSupportLoaderManager().initLoader(FETCH_REVIEWS_LOADER_ID, null, reviewCallback);
-        getSupportLoaderManager().initLoader(FETCH_MOVIE_DETAIL_LOADER_ID, null, favoriteCallback);
+        getSupportLoaderManager().initLoader(FETCH_MOVIE_WITH_ID_LOADER_ID, null, favoriteCallback);
 
     }
 
