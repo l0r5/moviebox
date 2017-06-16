@@ -10,6 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.view.View;
 import com.example.android.moviebox.databinding.ActivityMovielistBinding;
 import com.example.android.moviebox.models.Movie;
 import com.example.android.moviebox.sync.SyncDbIntentService;
+import com.example.android.moviebox.sync.SyncDbUtils;
 import com.example.android.moviebox.utilities.DataFormatUtils;
 import com.example.android.moviebox.utilities.FetchFromDbTask;
 import com.example.android.moviebox.utilities.FetchMoviesTask;
@@ -28,6 +30,7 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements FetchMoviesTask.FetchMoviesCallback, MovieListAdapter.MovieListAdapterOnClickHandler, FetchFromDbTask.FetchMovieFromDbCallback {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     public static final int FETCH_ALL_MOVIES_DB_LOADER_ID = 1;
     public static final String POPULAR_MOVIES = "popular";
     public static final String TOP_RATED_MOVIES = "top_rated";
@@ -51,14 +54,9 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
         mMovieListAdapter = new MovieListAdapter(this);
         mBinding.recyclerViewMovielist.setAdapter(mMovieListAdapter);
 
-        syncDb();
+        SyncDbUtils.initialize(this);
         loadMovieData();
-    }
 
-    private void syncDb() {
-        Intent startSyncDbIntent = new Intent(this, SyncDbIntentService.class);
-        startSyncDbIntent.setAction(SyncDbIntentService.ACTION_SYNC_MOVIE_DB);
-        startService(startSyncDbIntent);
     }
 
     /**
@@ -209,6 +207,8 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
             Movie[] movieData = DataFormatUtils.getMoviesFromCursor(cursor);
             onTaskCompleted(movieData);
             cursor.close();
+        } else {
+            Log.d(TAG, "Error while loading");
         }
     }
 }

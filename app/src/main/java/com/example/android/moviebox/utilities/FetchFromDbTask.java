@@ -69,9 +69,7 @@ public class FetchFromDbTask implements LoaderManager.LoaderCallbacks<Cursor> {
 
             @Override
             public Cursor loadInBackground() {
-
                 try {
-
                     return mContext.getContentResolver().query(
                             uri,
                             null,
@@ -88,6 +86,9 @@ public class FetchFromDbTask implements LoaderManager.LoaderCallbacks<Cursor> {
 
             @Override
             public void deliverResult(Cursor data) {
+                if(data == null) {
+                    Log.d(TAG, "Data null");
+                }
                 mMovieData = data;
                 super.deliverResult(data);
             }
