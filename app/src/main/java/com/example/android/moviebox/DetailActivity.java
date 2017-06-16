@@ -27,7 +27,7 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
     private static final String TAG = DetailActivity.class.getSimpleName();
     private static final int FETCH_TRAILERS_LOADER_ID = 1;
     private static final int FETCH_REVIEWS_LOADER_ID = 2;
-    public static final int FETCH_MOVIE_WITH_ID_LOADER_ID = 3;
+    public static final int FETCH_MOVIE_WITH_ID_LOADER_ID = 4;
 
     private static final int BUTTON_NOT_FAVORITE = 0;
     private static final int BUTTON_FAVORITE = 1;
@@ -46,7 +46,7 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity.getExtras() != null) {
             mMovieDetails = intentThatStartedThisActivity.getParcelableExtra("movieDetailData");
-            loadDetailData();
+//            loadDetailData();
         }
 
         mBinding.collapsingToolbarMovieDetailTitle.setTitle(mMovieDetails.getTitle());

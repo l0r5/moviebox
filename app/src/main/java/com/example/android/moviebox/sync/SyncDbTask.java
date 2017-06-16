@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.android.moviebox.MainActivity;
 import com.example.android.moviebox.data.MoviesContract;
 import com.example.android.moviebox.models.Movie;
 import com.example.android.moviebox.utilities.DataFormatUtils;
@@ -22,13 +23,12 @@ import static com.example.android.moviebox.MainActivity.TOP_RATED_MOVIES;
 
 class SyncDbTask {
 
+    private static final String TAG = SyncDbTask.class.getSimpleName();
+
     synchronized static void syncMovies(Context context) {
 
         Movie[] fetchedPopularMovies = fetchMovies(context, NetworkUtils.getPath(POPULAR_MOVIES));
         Movie[] fetchedTopRatedMovies = fetchMovies(context, NetworkUtils.getPath(TOP_RATED_MOVIES));
-
-        Cursor allMoviesCursor = null;
-        Cursor favoriteMoviesCursor = null;
 
         if (fetchedPopularMovies != null && fetchedTopRatedMovies != null) {
             Movie[] allFetchedMovies = Movie.concatMovies(fetchedPopularMovies, fetchedTopRatedMovies);
@@ -37,14 +37,16 @@ class SyncDbTask {
 
                 ContentValues[] contentValuesFetchedMovies = DataFormatUtils.getContentValuesArrayFromMovieArray(allFetchedMovies);
 
-                allMoviesCursor = getAllMoviesFromDb(context);
+                Cursor allMoviesCursor = getAllMoviesFromDb(context);
 
                 if (allMoviesCursor != null) {
                     allMoviesCursor.moveToFirst();
                     if (checkIfTableIsEmpty(allMoviesCursor)) {
                         fillEmptyTable(context, contentValuesFetchedMovies);
+                        allMoviesCursor.close();
                     } else {
                         Movie[] allPersistedMovies = DataFormatUtils.getMoviesFromCursor(allMoviesCursor);
+                        allMoviesCursor.close();
 
                         // Create Arraylist from DB
                         ArrayList<Movie> persistedMoviesList = new ArrayList<Movie>(Arrays.asList(allPersistedMovies));
@@ -54,19 +56,24 @@ class SyncDbTask {
 
 
                         if (!(persistedMoviesList.containsAll(fetchedMoviesList))) {
-                            favoriteMoviesCursor = getFavoriteMoviesFromDb(context);
+                            Cursor favoriteMoviesCursor = getFavoriteMoviesFromDb(context);
 
                             if (favoriteMoviesCursor != null) {
-                                allMoviesCursor.moveToFirst();
+                                favoriteMoviesCursor.moveToFirst();
                                 Movie[] favoriteMovies = DataFormatUtils.getMoviesFromCursor(favoriteMoviesCursor);
+                                favoriteMoviesCursor.close();
 
                                 ArrayList<Movie> favoriteMoviesList = new ArrayList<Movie>(Arrays.asList(favoriteMovies));
 
+
                                 ArrayList<Movie> resultMoviesList = concatMovieList(fetchedMoviesList, favoriteMoviesList);
 
-                                ContentValues[] resultContentValues = DataFormatUtils.getContentValuesArrayFromMovieArray(resultMoviesList.toArray(new Movie[resultMoviesList.size()]));
 
-                                Log.d("Bla", "" + resultMoviesList);
+
+                                Movie[] resultMovies = resultMoviesList.toArray(new Movie[resultMoviesList.size()]);
+
+                                ContentValues[] resultContentValues = DataFormatUtils.getContentValuesArrayFromMovieArray(resultMovies);
+
 
                                 deleteTable(context);
 
@@ -79,29 +86,22 @@ class SyncDbTask {
                 }
             } // TODO if fetch not possible, load data straight from db
         }
-
-        if(allMoviesCursor != null) {
-            allMoviesCursor.close();
-        }
-
-        if(favoriteMoviesCursor != null) {
-            favoriteMoviesCursor.close();
-        }
-
-
     }
 
     private static ArrayList<Movie> concatMovieList(ArrayList<Movie> movieListFetched, ArrayList<Movie> movieListFavorite) {
 
+        ArrayList<Movie> resultList = new ArrayList<Movie>();
+        resultList.addAll(movieListFetched);
+
         for(Movie movieFav : movieListFavorite) {
             for(Movie movieFetched : movieListFetched) {
                 if(movieFav.getId().equals(movieFetched.getId())) {
-                    movieListFetched.remove(movieFetched);
-                    movieListFetched.add(movieFav);
+                    resultList.remove(movieFetched);
                 }
             }
         }
-        return movieListFetched;
+        resultList.addAll(movieListFavorite);
+        return resultList;
     }
 
     private static void deleteTable(Context context) {
@@ -155,10 +155,28 @@ class SyncDbTask {
             URL movieRequestUrl = NetworkUtils.buildUrl(context, moviesChoicePath);
             String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
             Movie[] movieData = DataFormatUtils.getMovieObjectsFromJson(jsonMovieResponse);
+            setCategory(movieData, moviesChoicePath);
             return movieData;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private static void setCategory (Movie[] movies, String category) {
+        switch(category) {
+            case TOP_RATED_MOVIES:
+                for(Movie movie : movies) {
+                    movie.setTopRated(1);
+                }
+                break;
+            case POPULAR_MOVIES:
+                for(Movie movie : movies) {
+                    movie.setPopular(1);
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown category: " + category);
         }
     }
 

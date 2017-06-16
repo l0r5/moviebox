@@ -14,6 +14,8 @@ public class Movie implements Parcelable {
     private String mRating;
     private String mDescription;
     private int mFavorite; //values can be 0 (false) and 1 (true)
+    private int mTopRated;
+    private int mPopular;
     private String mThumbnailUrlStr;
 
 
@@ -25,9 +27,11 @@ public class Movie implements Parcelable {
         mRating = rating;
         mDescription = description;
         mFavorite = 0;
+        mTopRated = 0;
+        mPopular = 0;
     }
 
-    public Movie(String id, String title, String thumbnailUrl, String releaseDate, String rating, String description, int favorite) {
+    public Movie(String id, String title, String thumbnailUrl, String releaseDate, String rating, String description, int favorite, int topRated, int popular) {
         mId = id;
         mTitle = title;
         mThumbnailUrlStr = thumbnailUrl;
@@ -35,6 +39,9 @@ public class Movie implements Parcelable {
         mRating = rating;
         mDescription = description;
         mFavorite = favorite;
+        mTopRated = topRated;
+        mPopular = popular;
+
     }
 
     /**
@@ -64,6 +71,14 @@ public class Movie implements Parcelable {
         return mFavorite;
     }
 
+    public int getTopRated() {
+        return mTopRated;
+    }
+
+    public int getPopular() {
+        return mPopular;
+    }
+
     public String getDescription() {
         return mDescription;
     }
@@ -75,6 +90,13 @@ public class Movie implements Parcelable {
         mFavorite = newFavorite;
     }
 
+    public void setTopRated(int newTopRated) {
+        mTopRated = newTopRated;
+    }
+
+    public void setPopular(int newPopular) {
+        mPopular = newPopular;
+    }
 
     public static Movie[] concatMovies(Movie[] moviesFirst, Movie[] moviesSecond) {
         Movie[] combinedMovies = new Movie[moviesFirst.length + moviesSecond.length];
@@ -95,6 +117,8 @@ public class Movie implements Parcelable {
         mRating = in.readString();
         mDescription = in.readString();
         mFavorite = in.readInt();
+        mPopular = in.readInt();
+        mTopRated = in.readInt();
     }
 
     @Override
@@ -111,6 +135,8 @@ public class Movie implements Parcelable {
         out.writeString(mRating);
         out.writeString(mDescription);
         out.writeInt(mFavorite);
+        out.writeInt(mTopRated);
+        out.writeInt(mPopular);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR

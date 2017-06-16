@@ -9,6 +9,8 @@ public class MoviesContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_MOVIES = "movies";
     public static final String PATH_FAVORITE = "favorite";
+    public static final String PATH_TOP_RATED = "toprated";
+    public static final String PATH_POPULAR = "popular";
 
 
     public static final class MoviesEntry implements BaseColumns {
@@ -25,6 +27,8 @@ public class MoviesContract {
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_DESCRIPTION = "description";
         public static final String COLUMN_FAVORITE = "favorite";
+        public static final String COLUMN_TOP_RATED = "top_rated";
+        public static final String COLUMN_POPULAR = "popular";
         public static final String COLUMN_THUMBNAIL_URL = "thumbnail_url";
 
     }

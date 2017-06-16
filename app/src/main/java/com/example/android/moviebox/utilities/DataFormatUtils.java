@@ -191,6 +191,8 @@ public final class DataFormatUtils {
         movieValues.put(MoviesContract.MoviesEntry.COLUMN_RATING, movie.getRating());
         movieValues.put(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION, movie.getDescription());
         movieValues.put(MoviesContract.MoviesEntry.COLUMN_FAVORITE, movie.getFavorite());
+        movieValues.put(MoviesContract.MoviesEntry.COLUMN_TOP_RATED, movie.getTopRated());
+        movieValues.put(MoviesContract.MoviesEntry.COLUMN_POPULAR, movie.getPopular());
         movieValues.put(MoviesContract.MoviesEntry.COLUMN_THUMBNAIL_URL, movie.getThumbnailUrlStr());
         return movieValues;
     }
@@ -217,7 +219,9 @@ public final class DataFormatUtils {
                 cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE)),
                 cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RATING)),
                 cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION)),
-                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_FAVORITE))
+                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_FAVORITE)),
+                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TOP_RATED)),
+                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POPULAR))
         );
     }
 
@@ -236,7 +240,9 @@ public final class DataFormatUtils {
                     cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE)),
                     cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RATING)),
                     cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION)),
-                    cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_FAVORITE))
+                    cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_FAVORITE)),
+                    cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TOP_RATED)),
+                    cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POPULAR))
             );
             cursor.moveToNext();
         }

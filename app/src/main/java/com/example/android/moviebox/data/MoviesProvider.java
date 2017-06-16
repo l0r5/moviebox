@@ -13,7 +13,10 @@ public class MoviesProvider extends ContentProvider {
 
     public static final int CODE_ALL_MOVIES = 100;
     public static final int CODE_MOVIE_WITH_ID= 101;
-    public static final int CODE_FAVORITE_MOVIES = 102;
+    public static final int CODE_POPULAR_MOVIES = 102;
+    public static final int CODE_TOP_RATED_MOVIES = 103;
+    public static final int CODE_FAVORITE_MOVIES = 104;
+
 
     private MoviesDbHelper mMovieDbHelper;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -25,6 +28,8 @@ public class MoviesProvider extends ContentProvider {
 
         matcher.addURI(authority, MoviesContract.PATH_MOVIES, CODE_ALL_MOVIES);
         matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/#", CODE_MOVIE_WITH_ID);
+        matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/" + MoviesContract.PATH_POPULAR, CODE_POPULAR_MOVIES);
+        matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/" + MoviesContract.PATH_TOP_RATED, CODE_TOP_RATED_MOVIES);
         matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/" + MoviesContract.PATH_FAVORITE, CODE_FAVORITE_MOVIES);
 
         return matcher;
@@ -97,6 +102,32 @@ public class MoviesProvider extends ContentProvider {
                         projection,
                         selectionId,
                         selectionIdArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case CODE_POPULAR_MOVIES:
+                String selectionPopular = "popular=?";
+                String isPopular = "1";
+                String[] selectionPopularArgs = new String[]{isPopular};
+
+                retCursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
+                        projection,
+                        selectionPopular,
+                        selectionPopularArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case CODE_TOP_RATED_MOVIES:
+                String selectionTopRated = "top_rated=?";
+                String isTopRated = "1";
+                String[] selectionTopRatedArgs = new String[]{isTopRated};
+
+                retCursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
+                        projection,
+                        selectionTopRated,
+                        selectionTopRatedArgs,
                         null,
                         null,
                         sortOrder);
