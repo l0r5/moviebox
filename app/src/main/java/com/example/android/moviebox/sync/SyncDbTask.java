@@ -13,8 +13,8 @@ import com.example.android.moviebox.utilities.NetworkUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.example.android.moviebox.MainActivity.POPULAR_MOVIES;
-import static com.example.android.moviebox.MainActivity.TOP_RATED_MOVIES;
+import static com.example.android.moviebox.ui.MainActivity.POPULAR_MOVIES;
+import static com.example.android.moviebox.ui.MainActivity.TOP_RATED_MOVIES;
 
 
 class SyncDbTask {
@@ -22,6 +22,8 @@ class SyncDbTask {
     private static final String TAG = SyncDbTask.class.getSimpleName();
 
     synchronized static void syncMovies(Context context) {
+
+        Log.i(TAG, "Start DB synchronization");
 
         // Fetch Movies from TheMovieDB
         Movie[] fetchedPopularMovies = SyncDbUtils.fetchMovies(context, NetworkUtils.getPath(POPULAR_MOVIES));

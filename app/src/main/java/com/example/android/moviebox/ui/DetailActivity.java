@@ -1,8 +1,7 @@
-package com.example.android.moviebox;
+package com.example.android.moviebox.ui;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,24 +10,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.android.moviebox.R;
 import com.example.android.moviebox.data.MoviesContract;
 import com.example.android.moviebox.databinding.MovieDetailBinding;
 import com.example.android.moviebox.models.Movie;
 import com.example.android.moviebox.models.Review;
 import com.example.android.moviebox.models.Trailer;
-import com.example.android.moviebox.utilities.DataFormatUtils;
-import com.example.android.moviebox.utilities.FetchFromDbTask;
-import com.example.android.moviebox.utilities.FetchMovieReviewsTask;
-import com.example.android.moviebox.utilities.FetchMovieTrailersTask;
+import com.example.android.moviebox.utilities.FetchMovieTrailerTask;
+import com.example.android.moviebox.utilities.GetDataFromDbTask;
+import com.example.android.moviebox.utilities.FetchMovieReviewTask;
 import com.squareup.picasso.Picasso;
 
-public class DetailActivity extends MainActivity implements FetchMovieTrailersTask.FetchMovieTrailersCallback, FetchMovieReviewsTask.FetchMovieReviewsCallback, FetchFromDbTask.FetchMovieFromDbCallback {
+public class DetailActivity extends MainActivity implements FetchMovieTrailerTask.FetchMovieTrailerCallback, FetchMovieReviewTask.FetchMovieReviewCallback, GetDataFromDbTask.FetchMovieFromDbCallback {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
-    private static final int FETCH_TRAILERS_LOADER_ID = 1;
-    private static final int FETCH_REVIEWS_LOADER_ID = 2;
-    public static final int FETCH_MOVIE_WITH_ID_LOADER_ID = 4;
-
+    private static final int FETCH_TRAILERS_LOADER_ID = 2;
+    private static final int FETCH_REVIEWS_LOADER_ID = 3;
     private static final int BUTTON_NOT_FAVORITE = 0;
     private static final int BUTTON_FAVORITE = 1;
 
@@ -46,7 +43,7 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity.getExtras() != null) {
             mMovieDetails = intentThatStartedThisActivity.getParcelableExtra("movieDetailData");
-//            loadDetailData();
+            loadDetailData();
         }
 
         mBinding.collapsingToolbarMovieDetailTitle.setTitle(mMovieDetails.getTitle());
@@ -59,19 +56,52 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
 
     }
 
+
     /**
-     * Restarts DB Fetch in Case the App will Pause
+     * Load Trailers and Reviews
      */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LoaderManager.LoaderCallbacks<Cursor> favoriteCallback = new FetchFromDbTask(this, this, mMovieDetails.getId());
-        getSupportLoaderManager().restartLoader(FETCH_MOVIE_WITH_ID_LOADER_ID, null, favoriteCallback);
+    private void loadDetailData() {
+
+        //load trailers
+        LoaderManager.LoaderCallbacks<Trailer[]> trailerCallback = new FetchMovieTrailerTask(this, this, mMovieDetails.getId());
+        getSupportLoaderManager().initLoader(FETCH_TRAILERS_LOADER_ID, null, trailerCallback);
+
+        //loader reviews
+        LoaderManager.LoaderCallbacks<Review[]> reviewCallback = new FetchMovieReviewTask(this, this, mMovieDetails.getId());
+        getSupportLoaderManager().initLoader(FETCH_REVIEWS_LOADER_ID, null, reviewCallback);
+
     }
 
     /**
+     * AsyncTaskLoader Callback
+     */
+
+
+    public void onReviewTaskCompleted(Review[] reviewData) {
+        if (reviewData != null) {
+            for (Review review : reviewData) {
+                Log.i("Review id: ", review.getId());
+            }
+        } else {
+            Log.d("DetailActivity", "Review loading error");
+        }
+    }
+
+    @Override
+    public void onTrailerTaskCompleted(Trailer[] trailerData) {
+        if (trailerData != null) {
+            for (Trailer trailer : trailerData) {
+                Log.i("Trailer id: ", trailer.getId());
+            }
+        } else {
+            Log.d("DetailActivity", "Trailer loading error");
+        }
+    }
+
+
+    /**
      * Toggle Button Text
-     * */
+     */
     private void setFavoriteButtonText() {
         int favoriteValue = mMovieDetails.getFavorite();
         switch (favoriteValue) {
@@ -89,7 +119,7 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
     /**
      *  Favorite Button Click Listener
      */
-    public void onFavorMovie(View view) {
+    public void onClickFavorite(View view) {
         int favoriteValue = mMovieDetails.getFavorite();
         ContentValues cv = new ContentValues();
         Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
@@ -115,54 +145,6 @@ public class DetailActivity extends MainActivity implements FetchMovieTrailersTa
         setFavoriteButtonText();
         getContentResolver().update(uri, cv, MoviesContract.MoviesEntry.COLUMN_FAVORITE, null);
 
-    }
-
-
-    /**
-     * Load Trailers and Reviews
-     */
-    private void loadDetailData() {
-        LoaderManager.LoaderCallbacks<Trailer[]> trailerCallback = new FetchMovieTrailersTask(this, this, mMovieDetails.getId());
-        LoaderManager.LoaderCallbacks<Review[]> reviewCallback = new FetchMovieReviewsTask(this, this, mMovieDetails.getId());
-        LoaderManager.LoaderCallbacks<Cursor> favoriteCallback = new FetchFromDbTask(this, this, mMovieDetails.getId());
-        getSupportLoaderManager().initLoader(FETCH_TRAILERS_LOADER_ID, null, trailerCallback);
-        getSupportLoaderManager().initLoader(FETCH_REVIEWS_LOADER_ID, null, reviewCallback);
-        getSupportLoaderManager().initLoader(FETCH_MOVIE_WITH_ID_LOADER_ID, null, favoriteCallback);
-
-    }
-
-    /**
-     * AsyncTaskLoader Callback
-     */
-    public void onTrailerTaskCompleted(Trailer[] trailerData) {
-        if (trailerData != null) {
-            for (Trailer trailer : trailerData) {
-                Log.i("Trailer id: ", trailer.getId());
-            }
-        } else {
-            Log.d("DetailActivity", "Trailer loading error");
-        }
-    }
-
-    public void onReviewTaskCompleted(Review[] reviewData) {
-        if (reviewData != null) {
-            for (Review review : reviewData) {
-                Log.i("Review id: ", review.getId());
-            }
-        } else {
-            Log.d("DetailActivity", "Review loading error");
-        }
-    }
-
-    /**
-     * Swaps Cursor and updates values from db
-     */
-    public void swapCursor(Cursor cursor) {
-        if (cursor != null && cursor.moveToFirst()) {
-            mMovieDetails = DataFormatUtils.getMovieFromCursor(cursor);
-            cursor.close();
-            setFavoriteButtonText();
-        }
     }
 
 

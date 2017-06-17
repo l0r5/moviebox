@@ -86,7 +86,7 @@
                             android:layout_marginTop="@dimen/standardMargin"
                             android:background="@color/colorAccent"
                             android:textColor="@color/colorWhite"
-                            android:onClick="onFavorMovie"
+                            android:onClick="onClickFavorite"
                             />
                     </LinearLayout>
 

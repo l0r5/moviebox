@@ -1,12 +1,10 @@
 package com.example.android.moviebox.utilities;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
 import com.example.android.moviebox.R;
-import com.example.android.moviebox.models.Movie;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,8 +13,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-import static com.example.android.moviebox.MainActivity.POPULAR_MOVIES;
-import static com.example.android.moviebox.MainActivity.TOP_RATED_MOVIES;
+import static com.example.android.moviebox.ui.MainActivity.POPULAR_MOVIES;
+import static com.example.android.moviebox.ui.MainActivity.TOP_RATED_MOVIES;
 
 
 public final class NetworkUtils {

@@ -1,4 +1,4 @@
-package com.example.android.moviebox;
+package com.example.android.moviebox.ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.android.moviebox.R;
 import com.example.android.moviebox.models.Movie;
 import com.squareup.picasso.Picasso;
 

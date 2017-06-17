@@ -17,8 +17,8 @@ import com.example.android.moviebox.utilities.NetworkUtils;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.example.android.moviebox.MainActivity.POPULAR_MOVIES;
-import static com.example.android.moviebox.MainActivity.TOP_RATED_MOVIES;
+import static com.example.android.moviebox.ui.MainActivity.POPULAR_MOVIES;
+import static com.example.android.moviebox.ui.MainActivity.TOP_RATED_MOVIES;
 
 
 public class SyncDbUtils {
@@ -35,10 +35,7 @@ public class SyncDbUtils {
             @Override
             protected Void doInBackground(Void... voids) {
 
-                // Check if Db is empty
-                if (checkIfTableIsEmpty(context)) {
-                    startImmediateSync(context);
-                }
+                startImmediateSync(context);
 
 
                 return null;

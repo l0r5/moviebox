@@ -211,6 +211,10 @@ public class MoviesProvider extends ContentProvider {
 
                 rowsUpdated++;
 
+                if (rowsUpdated > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+
                 return rowsUpdated;
             default:
                 throw new UnsupportedOperationException("Unknow uri: " + uri);

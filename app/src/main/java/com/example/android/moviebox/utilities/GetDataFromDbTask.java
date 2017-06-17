@@ -10,26 +10,19 @@ import android.support.v4.content.Loader;
 
 import com.example.android.moviebox.data.MoviesContract;
 
-import static com.example.android.moviebox.DetailActivity.FETCH_MOVIE_WITH_ID_LOADER_ID;
-import static com.example.android.moviebox.MainActivity.FETCH_ALL_MOVIES_DB_LOADER_ID;
+import static com.example.android.moviebox.ui.MainActivity.GET_ALL_MOVIES_DB_LOADER_ID;
 
 
-public class FetchFromDbTask implements LoaderManager.LoaderCallbacks<Cursor> {
+public class GetDataFromDbTask implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = FetchFromDbTask.class.getSimpleName();
+    private static final String TAG = GetDataFromDbTask.class.getSimpleName();
     private FetchMovieFromDbCallback mCallback;
     private Context mContext;
-    private String mMovieId;
 
-    public FetchFromDbTask(FetchMovieFromDbCallback callback, Context context) {
+
+    public GetDataFromDbTask(FetchMovieFromDbCallback callback, Context context) {
         this.mCallback = callback;
         this.mContext = context;
-    }
-
-    public FetchFromDbTask(FetchMovieFromDbCallback callback, Context context, String mMovieId) {
-        this.mCallback = callback;
-        this.mContext = context;
-        this.mMovieId = mMovieId;
     }
 
     public interface FetchMovieFromDbCallback {
@@ -42,19 +35,8 @@ public class FetchFromDbTask implements LoaderManager.LoaderCallbacks<Cursor> {
         final Uri uri;
 
         switch (loaderId) {
-            case FETCH_MOVIE_WITH_ID_LOADER_ID:
-                uri = MoviesContract.MoviesEntry.CONTENT_URI.buildUpon()
-                        .appendPath(mMovieId)
-                        .build();
 
-                return new CursorLoader(mContext,
-                        uri,
-                        null,
-                        null,
-                        null,
-                        null);
-
-            case FETCH_ALL_MOVIES_DB_LOADER_ID:
+            case GET_ALL_MOVIES_DB_LOADER_ID:
                 uri = MoviesContract.MoviesEntry.CONTENT_URI;
                 return new CursorLoader(mContext,
                         uri,

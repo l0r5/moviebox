@@ -11,24 +11,28 @@ import com.example.android.moviebox.models.Trailer;
 
 import java.net.URL;
 
-public class FetchMovieTrailersTask implements LoaderManager.LoaderCallbacks<Trailer[]> {
 
-    private FetchMovieTrailersCallback mCallback;
+public class FetchMovieTrailerTask implements LoaderManager.LoaderCallbacks<Trailer[]> {
+
+    private FetchMovieTrailerCallback mCallback;
     private Context mContext;
     private String mMovieId;
 
-    public FetchMovieTrailersTask(FetchMovieTrailersCallback callback,Context context, String movieId) {
+    public FetchMovieTrailerTask(FetchMovieTrailerCallback callback, Context context, String movieId) {
         this.mCallback = callback;
         this.mContext = context;
         this.mMovieId = movieId;
     }
 
-    public interface FetchMovieTrailersCallback {
+    public interface FetchMovieTrailerCallback {
         void onTrailerTaskCompleted(Trailer[] trailerData);
     }
 
+
     @Override
     public Loader<Trailer[]> onCreateLoader(int id, final Bundle args) {
+
+
         return new AsyncTaskLoader<Trailer[]>(mContext) {
 
             Trailer[] trailerData = null;

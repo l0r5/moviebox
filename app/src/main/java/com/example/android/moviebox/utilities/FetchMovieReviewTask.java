@@ -14,24 +14,27 @@ import java.net.URL;
 
 
 
-public class FetchMovieReviewsTask implements LoaderManager.LoaderCallbacks<Review[]> {
+public class FetchMovieReviewTask implements LoaderManager.LoaderCallbacks<Review[]> {
 
-    private FetchMovieReviewsCallback mCallback;
+    private FetchMovieReviewCallback mCallback;
     private Context mContext;
     private String mMovieId;
 
-    public FetchMovieReviewsTask(FetchMovieReviewsCallback callback,Context context, String movieId) {
+    public FetchMovieReviewTask(FetchMovieReviewCallback callback, Context context, String movieId) {
         this.mCallback = callback;
         this.mContext = context;
         this.mMovieId = movieId;
     }
 
-    public interface FetchMovieReviewsCallback {
+    public interface FetchMovieReviewCallback {
         void onReviewTaskCompleted(Review[] reviewData);
     }
 
+
     @Override
     public Loader<Review[]> onCreateLoader(int id, final Bundle args) {
+
+
         return new AsyncTaskLoader<Review[]>(mContext) {
 
             Review[] reviewData = null;

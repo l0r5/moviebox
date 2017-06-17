@@ -1,11 +1,9 @@
-package com.example.android.moviebox;
+package com.example.android.moviebox.ui;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
-import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,25 +14,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.android.moviebox.R;
 import com.example.android.moviebox.databinding.ActivityMovielistBinding;
 import com.example.android.moviebox.models.Movie;
-import com.example.android.moviebox.sync.SyncDbIntentService;
 import com.example.android.moviebox.sync.SyncDbUtils;
 import com.example.android.moviebox.utilities.DataFormatUtils;
-import com.example.android.moviebox.utilities.FetchFromDbTask;
-import com.example.android.moviebox.utilities.FetchMoviesTask;
+import com.example.android.moviebox.utilities.GetDataFromDbTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class MainActivity extends AppCompatActivity implements FetchMoviesTask.FetchMoviesCallback, MovieListAdapter.MovieListAdapterOnClickHandler, FetchFromDbTask.FetchMovieFromDbCallback {
+public class MainActivity extends AppCompatActivity implements MovieListAdapter.MovieListAdapterOnClickHandler, GetDataFromDbTask.FetchMovieFromDbCallback {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static final int FETCH_ALL_MOVIES_DB_LOADER_ID = 1;
+    public static final int GET_ALL_MOVIES_DB_LOADER_ID = 1;
     public static final String POPULAR_MOVIES = "popular";
     public static final String TOP_RATED_MOVIES = "top_rated";
     private static final String FAVORITE_MOVIES = "favorite";
+    private static final boolean LOADING_INDICATOR_ON = true;
+    private static final boolean LOADING_INDICATOR_OFF = false;
     private MovieListAdapter mMovieListAdapter;
     ActivityMovielistBinding mBinding;
     Movie[] mMovies;
@@ -59,18 +58,20 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
 
     }
 
+
     /**
      * Loading & Persisting Movies
      */
     private void loadMovieData() {
+        toggleLoadingIndicator(LOADING_INDICATOR_ON);
         showMovieDataView();
         getMoviesFromDb();
     }
 
 
     private void getMoviesFromDb() {
-        LoaderManager.LoaderCallbacks<Cursor> moviesCallback = new FetchFromDbTask(this, this);
-        getSupportLoaderManager().initLoader(FETCH_ALL_MOVIES_DB_LOADER_ID, null, moviesCallback);
+        LoaderManager.LoaderCallbacks<Cursor> moviesCallback = new GetDataFromDbTask(this, this);
+        getSupportLoaderManager().initLoader(GET_ALL_MOVIES_DB_LOADER_ID, null, moviesCallback);
     }
 
     private void selectMoviesForCategory(String category) {
@@ -188,8 +189,7 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.F
      * AsyncTaskLoader Callback
      */
     public void onTaskCompleted(Movie[] movieData) {
-        toggleLoadingIndicator(false); // TODO muss woanders hin
-
+        toggleLoadingIndicator(LOADING_INDICATOR_OFF);
         if (movieData != null) {
             mMovies = movieData;
             mMovieListAdapter.setMovieData(movieData);
