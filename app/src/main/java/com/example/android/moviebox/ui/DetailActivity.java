@@ -33,6 +33,8 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
     private static final int BUTTON_NOT_FAVORITE = 0;
     private static final int BUTTON_FAVORITE = 1;
     private TrailerListAdapter mTrailerListAdapter;
+    private ReviewListAdapter mReviewListAdapter;
+
 
     ActivityMovieDetailBinding mBinding;
     private Movie mMovieDetails;
@@ -60,9 +62,13 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         setFavoriteButtonText();
 
         mBinding.recyclerViewTrailerList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mBinding.recyclerViewTrailerList.setHasFixedSize(true);
         mTrailerListAdapter = new TrailerListAdapter(this);
         mBinding.recyclerViewTrailerList.setAdapter(mTrailerListAdapter);
+
+        mBinding.recyclerViewReviewList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mReviewListAdapter = new ReviewListAdapter();
+        mBinding.recyclerViewReviewList.setAdapter(mReviewListAdapter);
+
 
     }
 
@@ -87,6 +93,7 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
      */
     public void onReviewTaskCompleted(Review[] reviewData) {
         if (reviewData != null) {
+            mReviewListAdapter.setReviewData(reviewData);
             for (Review review : reviewData) {
                 Log.i("Review id: ", review.getId());
             }
@@ -158,5 +165,6 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         Intent intentToStartYoutubeTrailer = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerDetails.getYoutubeUrl().toString()));
         startActivity(intentToStartYoutubeTrailer);
     }
+
 }
 

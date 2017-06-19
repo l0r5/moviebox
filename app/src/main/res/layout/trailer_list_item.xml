@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/image_view_play_icon"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         app:srcCompat="@android:drawable/ic_media_play"
@@ -25,7 +25,7 @@
         android:textSize="@dimen/textSizeMedium"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="@dimen/smallMarginVerticalSpace"
-        app:layout_constraintLeft_toRightOf="@+id/imageView"
+        app:layout_constraintLeft_toRightOf="@+id/image_view_play_icon"
         android:layout_marginLeft="@dimen/standardMarginHorizontalSpace"
         android:layout_marginStart="@dimen/standardMarginHorizontalSpace"
         android:layout_marginRight="@dimen/standardMarginHorizontalSpace"

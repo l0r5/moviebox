@@ -20,4 +20,8 @@ public class Review {
     public String getId() {
         return mId;
     }
+
+    public String getAuthor() {
+        return mAuthor;
+    }
 }

@@ -77,7 +77,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:layout_marginTop="@dimen/standardMarginVerticalSpace"
-                            android:textSize="@dimen/textSizeMedium" />
+                            android:textSize="@dimen/textSizeSmall" />
 
                         <Button
                             android:id="@+id/button_movie_detail_favorite"
@@ -116,7 +116,7 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_trailer_list"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:padding="@dimen/standardPadding"/>
 
                     <View
@@ -124,6 +124,19 @@
                         android:layout_height="@dimen/spaceLineHeight"
                         android:background="#c0c0c0"
                         android:padding="@dimen/standardPadding" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view_review_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/standardPadding"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spaceLineHeight"
+                        android:background="#c0c0c0"
+                        android:padding="@dimen/standardPadding" />
+
                 </LinearLayout>
 
             </LinearLayout>
