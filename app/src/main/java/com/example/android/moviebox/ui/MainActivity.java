@@ -15,17 +15,18 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.android.moviebox.R;
-import com.example.android.moviebox.databinding.ActivityMovielistBinding;
+import com.example.android.moviebox.databinding.ActivityMovieListBinding;
+
 import com.example.android.moviebox.models.Movie;
 import com.example.android.moviebox.sync.SyncDbUtils;
 import com.example.android.moviebox.utilities.DataFormatUtils;
-import com.example.android.moviebox.utilities.GetDataFromDbTask;
+import com.example.android.moviebox.utilities.DbTaskHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class MainActivity extends AppCompatActivity implements MovieListAdapter.MovieListAdapterOnClickHandler, GetDataFromDbTask.FetchMovieFromDbCallback {
+public class MainActivity extends AppCompatActivity implements MovieListAdapter.MovieListAdapterOnClickHandler, DbTaskHandler.FetchMovieFromDbCallback {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int GET_ALL_MOVIES_DB_LOADER_ID = 1;
@@ -35,23 +36,23 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     private static final boolean LOADING_INDICATOR_ON = true;
     private static final boolean LOADING_INDICATOR_OFF = false;
     private MovieListAdapter mMovieListAdapter;
-    ActivityMovielistBinding mBinding;
+    ActivityMovieListBinding mBinding;
     Movie[] mMovies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_movielist);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_list);
 
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mBinding.recyclerViewMovielist.setLayoutManager(new GridLayoutManager(this, 2));
+            mBinding.recyclerViewMovieList.setLayoutManager(new GridLayoutManager(this, 2));
         } else {
-            mBinding.recyclerViewMovielist.setLayoutManager(new GridLayoutManager(this, 4));
+            mBinding.recyclerViewMovieList.setLayoutManager(new GridLayoutManager(this, 4));
         }
 
-        mBinding.recyclerViewMovielist.setHasFixedSize(true);
+        mBinding.recyclerViewMovieList.setHasFixedSize(true);
         mMovieListAdapter = new MovieListAdapter(this);
-        mBinding.recyclerViewMovielist.setAdapter(mMovieListAdapter);
+        mBinding.recyclerViewMovieList.setAdapter(mMovieListAdapter);
 
         SyncDbUtils.initialize(this);
         loadMovieData();
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
 
     private void getMoviesFromDb() {
-        LoaderManager.LoaderCallbacks<Cursor> moviesCallback = new GetDataFromDbTask(this, this);
+        LoaderManager.LoaderCallbacks<Cursor> moviesCallback = new DbTaskHandler(this, this);
         getSupportLoaderManager().initLoader(GET_ALL_MOVIES_DB_LOADER_ID, null, moviesCallback);
     }
 
@@ -168,11 +169,11 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
      */
     private void showMovieDataView() {
         mBinding.textViewErrorMessage.setVisibility(View.INVISIBLE);
-        mBinding.recyclerViewMovielist.setVisibility(View.VISIBLE);
+        mBinding.recyclerViewMovieList.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage() {
-        mBinding.recyclerViewMovielist.setVisibility(View.INVISIBLE);
+        mBinding.recyclerViewMovieList.setVisibility(View.INVISIBLE);
         mBinding.textViewErrorMessage.setVisibility(View.VISIBLE);
     }
 

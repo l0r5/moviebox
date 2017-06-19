@@ -31,4 +31,13 @@ public class Trailer {
     public String getId() {
         return mId;
     }
+
+    public URL getYoutubeUrl() {
+        return mYoutubeUrl;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
 }

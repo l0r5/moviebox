@@ -55,35 +55,35 @@
                         android:layout_gravity="start"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/image_description"
-                        android:padding="12dp"
+                        android:padding="@dimen/standardPadding"
                         android:scaleType="centerCrop" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="12dp">
+                        android:padding="@dimen/standardPadding">
 
                         <TextView
                             android:id="@+id/text_view_movie_detail_release_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:textSize="24sp" />
+                            android:textSize="@dimen/textSizeLarge" />
 
                         <TextView
                             android:id="@+id/text_view_movie_detail_rating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:layout_marginTop="@dimen/standardMargin"
-                            android:textSize="20sp" />
+                            android:layout_marginTop="@dimen/standardMarginVerticalSpace"
+                            android:textSize="@dimen/textSizeMedium" />
 
                         <Button
                             android:id="@+id/button_movie_detail_favorite"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/standardMargin"
+                            android:layout_marginTop="@dimen/standardMarginVerticalSpace"
                             android:background="@color/colorAccent"
                             android:textColor="@color/colorWhite"
                             android:onClick="onClickFavorite"
@@ -96,49 +96,36 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="@dimen/standardPadding">
 
                     <TextView
                         android:id="@+id/text_view_movie_detail_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="12dp"
-                        android:textSize="22sp" />
+                        android:padding="@dimen/standardPadding"
+                        android:textSize="@dimen/textSizeMedium" />
 
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="@dimen/spaceLineHeight"
                         android:background="#c0c0c0"
-                        android:padding="12dp" />
+                        android:padding="@dimen/standardPadding" />
 
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <ListView
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view_trailer_list"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/standardPadding"/>
 
-                    </ListView>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ListView
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                    </ListView>
-
+                        android:layout_height="@dimen/spaceLineHeight"
+                        android:background="#c0c0c0"
+                        android:padding="@dimen/standardPadding" />
                 </LinearLayout>
+
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </android.support.design.widget.CoordinatorLayout>

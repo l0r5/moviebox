@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Margin, Padding, Space -->
     <dimen name="appbarHeight">200dp</dimen>
-    <dimen name="standardMargin">20dp</dimen>
+    <dimen name="standardMarginVerticalSpace">20dp</dimen>
+    <dimen name="standardMarginHorizontalSpace">12dp</dimen>
+    <dimen name="smallMarginVerticalSpace">4dp</dimen>
+    <dimen name="standardPadding">12dp</dimen>
+    <dimen name="loadingIndicatorSize">42dp</dimen>
+    <dimen name="spaceLineHeight">2dp</dimen>
+
+    <!-- Textsize -->
+    <dimen name="textSizeCaption">26sp</dimen>
+    <dimen name="textSizeLarge">22sp</dimen>
+    <dimen name="textSizeMedium">20sp</dimen>
+    <dimen name="textSizeSmall">18sp</dimen>
+
 </resources>

@@ -15,7 +15,6 @@ import com.squareup.picasso.Picasso;
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieListAdapterViewHolder> {
 
     private Movie[] mMovieData;
-
     final private MovieListAdapterOnClickHandler mClickHandler;
 
     public interface MovieListAdapterOnClickHandler {
@@ -48,7 +47,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     @Override
     public MovieListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        int layoutIdForListItem = R.layout.movielist_list_item;
+        int layoutIdForListItem = R.layout.movie_list_item;
         LayoutInflater inflater= LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
         View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);

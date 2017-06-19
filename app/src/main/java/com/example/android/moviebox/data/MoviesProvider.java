@@ -189,7 +189,7 @@ public class MoviesProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int update(@NonNull Uri uri, @NonNull ContentValues values, @NonNull String selection, @Nullable String[] selectionArgs) {
         final SQLiteDatabase db = mMovieDbHelper.getWritableDatabase();
 
         int rowsUpdated = 0;
@@ -198,10 +198,8 @@ public class MoviesProvider extends ContentProvider {
         switch(match) {
             case CODE_MOVIE_WITH_ID:
                 String movieId = uri.getLastPathSegment();
-
                 String mSelection = "movie_id=?";
                 String[] mSelectionArgs = new String[]{movieId};
-
 
                 db.update(
                         MoviesContract.MoviesEntry.TABLE_NAME,
