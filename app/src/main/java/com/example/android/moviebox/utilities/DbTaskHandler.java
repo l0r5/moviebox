@@ -62,6 +62,4 @@ public class DbTaskHandler implements LoaderManager.LoaderCallbacks<Cursor> {
     public void onLoaderReset(Loader<Cursor> loader) {
         mCallback.swapCursor(null);
     }
-
-
 }

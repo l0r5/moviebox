@@ -10,6 +10,10 @@
     <string name="no_favorite_toast_text">This movie belongs not to my favs anymore&#8230;</string>
     <string name="trailers_label">Trailers</string>
     <string name="reviews_label">Reviews</string>
+    <string name="empty_favorites">Nothing to see here, yet.\n\n
+        ¯\\_(ツ)_/¯
+        \n\nClick on the \"❤️\" within the Detail View of a Movie to add them here.
+    </string>
 
 
 

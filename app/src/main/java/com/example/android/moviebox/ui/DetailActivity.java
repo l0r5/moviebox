@@ -22,7 +22,7 @@ import com.example.android.moviebox.utilities.DbTaskHandler;
 import com.example.android.moviebox.utilities.FetchMovieReviewTask;
 import com.squareup.picasso.Picasso;
 
-public class DetailActivity extends MainActivity implements TrailerListAdapter.TrailerListAdapterOnClickHandler,FetchMovieTrailerTask.FetchMovieTrailerCallback, FetchMovieReviewTask.FetchMovieReviewCallback, DbTaskHandler.FetchMovieFromDbCallback {
+public class DetailActivity extends MainActivity implements TrailerListAdapter.TrailerListAdapterOnClickHandler, FetchMovieTrailerTask.FetchMovieTrailerCallback, FetchMovieReviewTask.FetchMovieReviewCallback, DbTaskHandler.FetchMovieFromDbCallback {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
     private static final int FETCH_TRAILERS_LOADER_ID = 2;
@@ -35,9 +35,6 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
 
     ActivityMovieDetailBinding mBinding;
     private Movie mMovieDetails;
-    private Review mMovieReviews;
-    private Trailer mMovieTrailers;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +63,15 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         mReviewListAdapter = new ReviewListAdapter();
         mBinding.recyclerViewReviewList.setAdapter(mReviewListAdapter);
 
-
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String lifecycleDisplayTextViewContents = "Hello";
+        outState.putString(MOVIE_DETAIL_CALLBACK_KEY, lifecycleDisplayTextViewContents);
+    }
 
-    /**
-     * Load Trailers and Reviews
-     */
     private void loadDetailData() {
 
         //load trailers
@@ -85,14 +84,12 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
 
     }
 
-    /**
-     * AsyncTaskLoader Callback
-     */
+
     public void onReviewTaskCompleted(Review[] reviewData) {
         if (reviewData != null) {
             mReviewListAdapter.setReviewData(reviewData);
         } else {
-            Log.d("DetailActivity", "Review loading error");
+            Log.e(TAG, "Review loading error");
         }
     }
 
@@ -101,13 +98,10 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         if (trailerData != null) {
             mTrailerListAdapter.setTrailerData(trailerData);
         } else {
-            Log.d("DetailActivity", "Trailer loading error");
+            Log.e(TAG, "Trailer loading error");
         }
     }
 
-    /**
-     * Toggle Button Text
-     */
     private void setFavoriteButtonText() {
         int favoriteValue = mMovieDetails.getFavorite();
         switch (favoriteValue) {
@@ -122,9 +116,6 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         }
     }
 
-    /**
-     *  Favorite Button Click Listener
-     */
     public void onClickFavorite(View view) {
         int favoriteValue = mMovieDetails.getFavorite();
         ContentValues cv = new ContentValues();
@@ -150,14 +141,6 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         setFavoriteButtonText();
         getContentResolver().update(uri, cv, MoviesContract.MoviesEntry.COLUMN_FAVORITE, null);
     }
-
-//    public void toggleLoadingIndicator(boolean onOffSwitch) {
-//        if (onOffSwitch) {
-//            mBinding.progressBarLoadingIndicator.setVisibility(View.VISIBLE);
-//        } else {
-//            mBinding.progressBarLoadingIndicator.setVisibility(View.INVISIBLE);
-//        }
-//    }
 
     @Override
     public void onTrailerClick(Trailer trailerDetails) {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.os.PersistableBundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,7 +33,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     public static final int GET_ALL_MOVIES_DB_LOADER_ID = 1;
     public static final String POPULAR_MOVIES = "popular";
     public static final String TOP_RATED_MOVIES = "top_rated";
-    private static final String FAVORITE_MOVIES = "favorite";
+    public static final String FAVORITE_MOVIES = "favorite";
+    public static final String MOVIE_DETAIL_CALLBACK_KEY = "movie-detail-callback";
     private static final boolean LOADING_INDICATOR_ON = true;
     private static final boolean LOADING_INDICATOR_OFF = false;
     private MovieListAdapter mMovieListAdapter;
@@ -57,12 +59,16 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         SyncDbUtils.initialize(this);
         loadMovieData();
 
+        if(savedInstanceState != null) {
+            if (savedInstanceState.containsKey(MOVIE_DETAIL_CALLBACK_KEY)) {
+                String allPreviousLifecycleCallbacks = savedInstanceState
+                        .getString(MOVIE_DETAIL_CALLBACK_KEY);
+                Log.i(TAG, allPreviousLifecycleCallbacks);
+            }
+        }
     }
 
 
-    /**
-     * Loading & Persisting Movies
-     */
     private void loadMovieData() {
         toggleLoadingIndicator(LOADING_INDICATOR_ON);
         showMovieDataView();
@@ -75,8 +81,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         getSupportLoaderManager().initLoader(GET_ALL_MOVIES_DB_LOADER_ID, null, moviesCallback);
     }
 
-    private void selectMoviesForCategory(String category) {
-
+    public void selectMoviesForCategory(String category) {
         ArrayList<Movie> allMoviesList = new ArrayList<>(Arrays.asList(mMovies));
         ArrayList<Movie> categoryList = new ArrayList<>();
         Movie[] categoryMovies;
@@ -116,6 +121,13 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 throw new UnsupportedOperationException("Unknow movies category: " + category);
         }
 
+        // No favorites, yet
+        if(categoryMovies.length == 0) {
+            mBinding.textViewEmptyFavorites.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.textViewEmptyFavorites.setVisibility(View.INVISIBLE);
+        }
+
     }
 
 
@@ -144,14 +156,9 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 selectMoviesForCategory(FAVORITE_MOVIES);
                 return true;
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Listeners & Implicit Intent
-     */
     @Override
     public void onClick(Movie movieDetails) {
         Intent intentToStartActivity = new Intent(this, DetailActivity.class);
@@ -160,9 +167,6 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     }
 
 
-    /**
-     * Activity related Methods
-     */
     private void showMovieDataView() {
         mBinding.textViewErrorMessage.setVisibility(View.INVISIBLE);
         mBinding.recyclerViewMovieList.setVisibility(View.VISIBLE);
@@ -182,9 +186,6 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     }
 
 
-    /**
-     * AsyncTaskLoader Callback
-     */
     public void onTaskCompleted(Movie[] movieData) {
         toggleLoadingIndicator(LOADING_INDICATOR_OFF);
         if (movieData != null) {
@@ -196,16 +197,11 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         }
     }
 
-    /**
-     * Swaps Cursor and updates values from db
-     */
     public void swapCursor(Cursor cursor) {
         if (cursor != null && cursor.moveToFirst()) {
             Movie[] movieData = DataFormatUtils.getMoviesFromCursor(cursor);
-            onTaskCompleted(movieData);
             cursor.close();
-        } else {
-            Log.d(TAG, "Error while loading");
+            onTaskCompleted(movieData);
         }
     }
 }

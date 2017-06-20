@@ -16,7 +16,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/error"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:textSize="@dimen/textSizeCaption"
+            android:padding="@dimen/standardPadding"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/text_view_empty_favorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_favorites"
+            android:visibility="invisible"
+            android:textSize="@dimen/textSizeCaption"
+            android:padding="@dimen/standardPadding"
+            android:gravity="center"
+            />
 
         <ProgressBar
             android:id="@+id/progress_bar_loading_indicator"
