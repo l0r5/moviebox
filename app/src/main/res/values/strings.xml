@@ -6,6 +6,11 @@
     <string name="action_top_rated">Top Rated</string>
     <string name="action_favorite">Favorite</string>
     <string name="image_description">Movie  Thumbnail</string>
-    <string name="favorite">👍 like</string>
-    <string name="no_favorite">unlike</string>
+    <string name="favorite_toast_text">Great Movie!</string>
+    <string name="no_favorite_toast_text">This movie belongs not to my favs anymore&#8230;</string>
+    <string name="trailers_label">Trailers</string>
+    <string name="reviews_label">Reviews</string>
+
+
+
 </resources>

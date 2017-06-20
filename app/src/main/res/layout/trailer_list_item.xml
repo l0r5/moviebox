@@ -29,7 +29,6 @@
         android:layout_marginLeft="@dimen/standardMarginHorizontalSpace"
         android:layout_marginStart="@dimen/standardMarginHorizontalSpace"
         android:layout_marginRight="@dimen/standardMarginHorizontalSpace"
-        app:layout_constraintRight_toRightOf="parent"
         />
 
 </android.support.constraint.ConstraintLayout>

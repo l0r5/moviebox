@@ -40,7 +40,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="1000dp"
+                android:minHeight="2000dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -81,9 +81,9 @@
 
                         <Button
                             android:id="@+id/button_movie_detail_favorite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/standardMarginVerticalSpace"
+                            android:layout_height="44dp"
+                            android:layout_width="44dp"
                             android:background="@color/colorAccent"
                             android:textColor="@color/colorWhite"
                             android:onClick="onClickFavorite"
@@ -112,6 +112,14 @@
                         android:background="#c0c0c0"
                         android:padding="@dimen/standardPadding" />
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/standardPadding"
+                        android:textSize="@dimen/textSizeLarge"
+                        android:text="@string/trailers_label"
+                        />
+
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_trailer_list"
@@ -124,6 +132,14 @@
                         android:layout_height="@dimen/spaceLineHeight"
                         android:background="#c0c0c0"
                         android:padding="@dimen/standardPadding" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/standardPadding"
+                        android:textSize="@dimen/textSizeLarge"
+                        android:text="@string/reviews_label"
+                        />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_review_list"

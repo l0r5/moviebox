@@ -19,11 +19,13 @@ public class ReviewListAdapter extends RecyclerView.Adapter <ReviewListAdapter.R
 
     public class ReviewListAdapterViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView mReviewDataTextView;
+        private final TextView mReviewNameTextView;
+        private final TextView mReviewTextView;
 
         public ReviewListAdapterViewHolder(View view) {
             super(view);
-            mReviewDataTextView = (TextView) view.findViewById(R.id.text_view_review);
+            mReviewNameTextView = (TextView) view.findViewById(R.id.text_view_review_name);
+            mReviewTextView = (TextView) view.findViewById(R.id.text_view_review);
         }
 
     }
@@ -40,8 +42,11 @@ public class ReviewListAdapter extends RecyclerView.Adapter <ReviewListAdapter.R
 
     @Override
     public void onBindViewHolder(ReviewListAdapterViewHolder holder, int position) {
-        String reviewLink = mReviewData[position].getAuthor();
-        holder.mReviewDataTextView.setText(reviewLink);
+        String reviewerName = mReviewData[position].getAuthor();
+        String review = mReviewData[position].getContent();
+        holder.mReviewNameTextView.setText(reviewerName);
+        holder.mReviewTextView.setText("\"" + review + "\"");
+
     }
 
     @Override
@@ -52,6 +57,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter <ReviewListAdapter.R
 
     public void setReviewData(Review[] reviewData) {
         mReviewData = reviewData;
+        notifyDataSetChanged();
     }
 
 

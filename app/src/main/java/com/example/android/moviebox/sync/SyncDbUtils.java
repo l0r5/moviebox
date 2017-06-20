@@ -13,9 +13,17 @@ import com.example.android.moviebox.data.MoviesContract;
 import com.example.android.moviebox.models.Movie;
 import com.example.android.moviebox.utilities.DataFormatUtils;
 import com.example.android.moviebox.utilities.NetworkUtils;
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.Driver;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.Trigger;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.android.moviebox.ui.MainActivity.POPULAR_MOVIES;
 import static com.example.android.moviebox.ui.MainActivity.TOP_RATED_MOVIES;
@@ -23,7 +31,33 @@ import static com.example.android.moviebox.ui.MainActivity.TOP_RATED_MOVIES;
 
 public class SyncDbUtils {
 
+    private static final int SYNC_INTERVAL_HOURS = 3;
+    private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
+    private static final int SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3;
+
     private static boolean sInitialized;
+
+    private static final String MOVIEBOX_SYNC_TAG = "moviebox-sync";
+
+    static void scheduleFirebaseJobDispatcher(@NonNull final Context context) {
+
+        Driver driver = new GooglePlayDriver(context);
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
+
+        Job syncMoviesJob = dispatcher.newJobBuilder()
+                .setService(FirebaseJobService.class)
+                .setTag(MOVIEBOX_SYNC_TAG)
+                .setConstraints(Constraint.ON_ANY_NETWORK)
+                .setLifetime(Lifetime.FOREVER)
+                .setRecurring(true)
+                .setTrigger(Trigger.executionWindow(
+                        SYNC_INTERVAL_SECONDS, SYNC_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
+                .setReplaceCurrent(true)
+                .build();
+
+        dispatcher.schedule(syncMoviesJob);
+
+    }
 
     synchronized public static void initialize(@NonNull final Context context) {
 
@@ -31,16 +65,15 @@ public class SyncDbUtils {
 
         sInitialized = true;
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
+        scheduleFirebaseJobDispatcher(context);
 
+       new Thread(new Runnable() {
+            @Override
+            public void run() {
                 startImmediateSync(context);
 
-
-                return null;
             }
-        }.execute();
+        }).start();
     }
 
     private static void startImmediateSync(@NonNull final Context context) {

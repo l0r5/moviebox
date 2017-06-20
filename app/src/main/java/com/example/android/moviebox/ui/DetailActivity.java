@@ -22,9 +22,6 @@ import com.example.android.moviebox.utilities.DbTaskHandler;
 import com.example.android.moviebox.utilities.FetchMovieReviewTask;
 import com.squareup.picasso.Picasso;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 public class DetailActivity extends MainActivity implements TrailerListAdapter.TrailerListAdapterOnClickHandler,FetchMovieTrailerTask.FetchMovieTrailerCallback, FetchMovieReviewTask.FetchMovieReviewCallback, DbTaskHandler.FetchMovieFromDbCallback {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
@@ -94,9 +91,6 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
     public void onReviewTaskCompleted(Review[] reviewData) {
         if (reviewData != null) {
             mReviewListAdapter.setReviewData(reviewData);
-            for (Review review : reviewData) {
-                Log.i("Review id: ", review.getId());
-            }
         } else {
             Log.d("DetailActivity", "Review loading error");
         }
@@ -106,9 +100,6 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
     public void onTrailerTaskCompleted(Trailer[] trailerData) {
         if (trailerData != null) {
             mTrailerListAdapter.setTrailerData(trailerData);
-            for (Trailer trailer : trailerData) {
-                Log.i("Trailer id: ", trailer.getId());
-            }
         } else {
             Log.d("DetailActivity", "Trailer loading error");
         }
@@ -121,10 +112,10 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         int favoriteValue = mMovieDetails.getFavorite();
         switch (favoriteValue) {
             case BUTTON_NOT_FAVORITE:
-                mBinding.buttonMovieDetailFavorite.setText(R.string.favorite);
+                mBinding.buttonMovieDetailFavorite.setBackgroundResource(R.drawable.heart_outline);
                 break;
             case BUTTON_FAVORITE:
-                mBinding.buttonMovieDetailFavorite.setText(R.string.no_favorite);
+                mBinding.buttonMovieDetailFavorite.setBackgroundResource(R.drawable.heart);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknow integer: " + favoriteValue);
@@ -143,13 +134,13 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         switch (favoriteValue) {
             // Button will be set to Favorite
             case BUTTON_NOT_FAVORITE:
-                Toast.makeText(this, "Marked as favorite", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.favorite_toast_text, Toast.LENGTH_SHORT).show();
                 mMovieDetails.setFavorite(BUTTON_FAVORITE);
                 cv.put(MoviesContract.MoviesEntry.COLUMN_FAVORITE, BUTTON_FAVORITE);
                 break;
             // Button will be set to non-Favorite
             case BUTTON_FAVORITE:
-                Toast.makeText(this, "Marked as non-favorite", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.no_favorite_toast_text, Toast.LENGTH_SHORT).show();
                 mMovieDetails.setFavorite(BUTTON_NOT_FAVORITE);
                 cv.put(MoviesContract.MoviesEntry.COLUMN_FAVORITE, BUTTON_NOT_FAVORITE);
                 break;
@@ -159,6 +150,14 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         setFavoriteButtonText();
         getContentResolver().update(uri, cv, MoviesContract.MoviesEntry.COLUMN_FAVORITE, null);
     }
+
+//    public void toggleLoadingIndicator(boolean onOffSwitch) {
+//        if (onOffSwitch) {
+//            mBinding.progressBarLoadingIndicator.setVisibility(View.VISIBLE);
+//        } else {
+//            mBinding.progressBarLoadingIndicator.setVisibility(View.INVISIBLE);
+//        }
+//    }
 
     @Override
     public void onTrailerClick(Trailer trailerDetails) {

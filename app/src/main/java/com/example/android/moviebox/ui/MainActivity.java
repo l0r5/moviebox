@@ -119,10 +119,6 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     }
 
 
-
-    /**
-     * Menu
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

@@ -39,6 +39,16 @@
             android:name=".sync.SyncDbIntentService"
             android:exported="false" />
 
+        <!--The manifest entry for the FirebaseJobServiceService-->
+        <service
+            android:name=".sync.FirebaseJobService"
+            android:exported="false">
+            <!-- COMPLETED (9) Declare an intent filter with the action ACTION_EXECUTE -->
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+
 
     </application>
 

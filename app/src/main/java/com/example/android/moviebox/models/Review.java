@@ -24,4 +24,9 @@ public class Review {
     public String getAuthor() {
         return mAuthor;
     }
+
+    public String getContent() {
+        return mContent;
+    }
+
 }
