@@ -44,7 +44,6 @@ public class FetchMovieReviewTask implements LoaderManager.LoaderCallbacks<Revie
                 if (reviewData != null) {
                     deliverResult(reviewData);
                 } else {
-                    // TODO loading indicator
                     forceLoad();
                 }
             }

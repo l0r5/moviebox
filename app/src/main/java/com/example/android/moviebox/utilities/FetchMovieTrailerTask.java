@@ -42,7 +42,6 @@ public class FetchMovieTrailerTask implements LoaderManager.LoaderCallbacks<Trai
                 if (trailerData != null) {
                     deliverResult(trailerData);
                 } else {
-                    // TODO loading indicator
                     forceLoad();
                 }
             }

@@ -109,7 +109,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/spaceLineHeight"
-                        android:background="#c0c0c0"
+                        android:background="@color/colorGrey"
                         android:padding="@dimen/standardPadding" />
 
                     <TextView
@@ -130,7 +130,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/spaceLineHeight"
-                        android:background="#c0c0c0"
+                        android:background="@color/colorGrey"
                         android:padding="@dimen/standardPadding" />
 
                     <TextView
@@ -150,7 +150,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/spaceLineHeight"
-                        android:background="#c0c0c0"
+                        android:background="@color/colorGrey"
                         android:padding="@dimen/standardPadding" />
 
                 </LinearLayout>

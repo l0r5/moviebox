@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
-import android.os.PersistableBundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,12 +33,16 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     public static final String POPULAR_MOVIES = "popular";
     public static final String TOP_RATED_MOVIES = "top_rated";
     public static final String FAVORITE_MOVIES = "favorite";
-    public static final String MOVIE_DETAIL_CALLBACK_KEY = "movie-detail-callback";
+    public static final String STATE_MOVIES_KEY = "moviesKey";
+    public static final String STATE_CATEGORY_KEY = "categoryKeyState";
+    public static final String INTENT_MOVIE_DETAIL_KEY = "movieDetailKey";
+    public static final String INTENT_CATEGORY_KEY = "categoryKeyIntent";
     private static final boolean LOADING_INDICATOR_ON = true;
     private static final boolean LOADING_INDICATOR_OFF = false;
     private MovieListAdapter mMovieListAdapter;
-    ActivityMovieListBinding mBinding;
-    Movie[] mMovies;
+    private ActivityMovieListBinding mBinding;
+    private Movie[] mMovies;
+    private String mCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,22 +55,54 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             mBinding.recyclerViewMovieList.setLayoutManager(new GridLayoutManager(this, 4));
         }
 
+        if (savedInstanceState == null) {
+            mCategory = POPULAR_MOVIES;
+            setActivityTitle(mCategory);
+        }
+
         mBinding.recyclerViewMovieList.setHasFixedSize(true);
         mMovieListAdapter = new MovieListAdapter(this);
         mBinding.recyclerViewMovieList.setAdapter(mMovieListAdapter);
 
         SyncDbUtils.initialize(this);
         loadMovieData();
+    }
 
-        if(savedInstanceState != null) {
-            if (savedInstanceState.containsKey(MOVIE_DETAIL_CALLBACK_KEY)) {
-                String allPreviousLifecycleCallbacks = savedInstanceState
-                        .getString(MOVIE_DETAIL_CALLBACK_KEY);
-                Log.i(TAG, allPreviousLifecycleCallbacks);
-            }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mMovies != null) {
+            selectMoviesForCategory();
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (mMovies != null) {
+            outState.putParcelableArray(STATE_MOVIES_KEY, mMovies);
+        }
+
+        if (mCategory != null) {
+            outState.putString(STATE_CATEGORY_KEY, mCategory);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_MOVIES_KEY)) {
+            mMovies = (Movie[]) savedInstanceState.getParcelableArray(STATE_MOVIES_KEY);
+        }
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_CATEGORY_KEY)) {
+            mCategory = savedInstanceState.getString(STATE_CATEGORY_KEY);
+        }
+    }
 
     private void loadMovieData() {
         toggleLoadingIndicator(LOADING_INDICATOR_ON);
@@ -81,12 +116,12 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         getSupportLoaderManager().initLoader(GET_ALL_MOVIES_DB_LOADER_ID, null, moviesCallback);
     }
 
-    public void selectMoviesForCategory(String category) {
+    public void selectMoviesForCategory() {
         ArrayList<Movie> allMoviesList = new ArrayList<>(Arrays.asList(mMovies));
         ArrayList<Movie> categoryList = new ArrayList<>();
         Movie[] categoryMovies;
 
-        switch (category) {
+        switch (mCategory) {
             case POPULAR_MOVIES:
                 for (Movie movie : allMoviesList) {
                     if (movie.getPopular() == 1) {
@@ -118,17 +153,37 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 mMovieListAdapter.setMovieData(categoryMovies);
                 break;
             default:
-                throw new UnsupportedOperationException("Unknow movies category: " + category);
+                throw new UnsupportedOperationException("Unknow movies category: " + mCategory);
         }
 
+        setActivityTitle(mCategory);
+
         // No favorites, yet
-        if(categoryMovies.length == 0) {
+        if (categoryMovies.length == 0) {
             mBinding.textViewEmptyFavorites.setVisibility(View.VISIBLE);
         } else {
             mBinding.textViewEmptyFavorites.setVisibility(View.INVISIBLE);
         }
 
     }
+
+    private void setActivityTitle(String category) {
+        switch(category) {
+            case POPULAR_MOVIES:
+                setTitle("Popular Movies");
+                break;
+            case TOP_RATED_MOVIES:
+                setTitle("Top Rated Movies");
+                break;
+            case FAVORITE_MOVIES:
+                setTitle("Favorite Movies");
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown movies category: " + mCategory);
+        }
+
+    }
+
 
 
     @Override
@@ -144,16 +199,19 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
         switch (id) {
             case R.id.action_popular:
+                mCategory = POPULAR_MOVIES;
                 mMovieListAdapter.setMovieData(null);
-                selectMoviesForCategory(POPULAR_MOVIES);
+                selectMoviesForCategory();
                 return true;
             case R.id.action_top_rated:
+                mCategory = TOP_RATED_MOVIES;
                 mMovieListAdapter.setMovieData(null);
-                selectMoviesForCategory(TOP_RATED_MOVIES);
+                selectMoviesForCategory();
                 return true;
             case R.id.action_favorite:
+                mCategory = FAVORITE_MOVIES;
                 mMovieListAdapter.setMovieData(null);
-                selectMoviesForCategory(FAVORITE_MOVIES);
+                selectMoviesForCategory();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -162,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     @Override
     public void onClick(Movie movieDetails) {
         Intent intentToStartActivity = new Intent(this, DetailActivity.class);
-        intentToStartActivity.putExtra("movieDetailData", movieDetails);
+        intentToStartActivity.putExtra(INTENT_MOVIE_DETAIL_KEY, movieDetails);
         startActivity(intentToStartActivity);
     }
 
@@ -191,7 +249,6 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         if (movieData != null) {
             mMovies = movieData;
             mMovieListAdapter.setMovieData(movieData);
-            selectMoviesForCategory(POPULAR_MOVIES);
         } else {
             showErrorMessage();
         }
@@ -200,7 +257,6 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     public void swapCursor(Cursor cursor) {
         if (cursor != null && cursor.moveToFirst()) {
             Movie[] movieData = DataFormatUtils.getMoviesFromCursor(cursor);
-            cursor.close();
             onTaskCompleted(movieData);
         }
     }

@@ -6,8 +6,11 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
     private static final int FETCH_REVIEWS_LOADER_ID = 3;
     private static final int BUTTON_NOT_FAVORITE = 0;
     private static final int BUTTON_FAVORITE = 1;
+    private static final String STATE_MOVIE_DETAILS_KEY = "movie-details-key";
     private TrailerListAdapter mTrailerListAdapter;
     private ReviewListAdapter mReviewListAdapter;
 
@@ -43,9 +47,14 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
 
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity.getExtras() != null) {
-            mMovieDetails = intentThatStartedThisActivity.getParcelableExtra("movieDetailData");
+            mMovieDetails = intentThatStartedThisActivity.getParcelableExtra(INTENT_MOVIE_DETAIL_KEY);
             loadDetailData();
         }
+
+        if(mMovieDetails != null) {
+            setTitle(mMovieDetails.getTitle());
+        }
+
         mBinding.collapsingToolbarMovieDetailTitle.setTitle(mMovieDetails.getTitle());
         mBinding.collapsingToolbarMovieDetailTitle.setExpandedTitleTextAppearance(R.style.ExpandedToolbar);
         mBinding.collapsingToolbarMovieDetailTitle.setCollapsedTitleTextAppearance(R.style.CollapsedToolbar);
@@ -65,12 +74,41 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
 
     }
 
+
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        String lifecycleDisplayTextViewContents = "Hello";
-        outState.putString(MOVIE_DETAIL_CALLBACK_KEY, lifecycleDisplayTextViewContents);
+
+        if (mMovieDetails != null) {
+            outState.putParcelable(STATE_MOVIE_DETAILS_KEY, mMovieDetails);
+        }
+
     }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_MOVIE_DETAILS_KEY)) {
+            mMovieDetails = savedInstanceState.getParcelable(STATE_MOVIE_DETAILS_KEY);
+        }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_popular:
+                return true;
+            case R.id.action_top_rated:
+                return true;
+            case R.id.action_favorite:
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void loadDetailData() {
 
@@ -145,7 +183,9 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
     @Override
     public void onTrailerClick(Trailer trailerDetails) {
         Intent intentToStartYoutubeTrailer = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerDetails.getYoutubeUrl().toString()));
-        startActivity(intentToStartYoutubeTrailer);
+        if (intentToStartYoutubeTrailer.resolveActivity(getPackageManager()) != null) {
+            startActivity(intentToStartYoutubeTrailer);
+        }
     }
 
 }
