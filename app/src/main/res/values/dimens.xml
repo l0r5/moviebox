@@ -5,8 +5,9 @@
     <dimen name="appbarHeight">200dp</dimen>
     <dimen name="standardMarginVerticalSpace">20dp</dimen>
     <dimen name="standardMarginHorizontalSpace">12dp</dimen>
-    <dimen name="smallMarginVerticalSpace">4dp</dimen>
+    <dimen name="smallMarginVerticalSpace">6dp</dimen>
     <dimen name="standardPadding">12dp</dimen>
+    <dimen name="smallPadding">6dp</dimen>
     <dimen name="loadingIndicatorSize">42dp</dimen>
     <dimen name="spaceLineHeight">2dp</dimen>
 

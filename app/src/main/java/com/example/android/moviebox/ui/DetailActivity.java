@@ -151,13 +151,12 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         int favoriteValue = mMovieDetails.getFavorite();
         switch (favoriteValue) {
             case BUTTON_NOT_FAVORITE:
-                mBinding.fabFavorite.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
-                mBinding.fabFavorite.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.heart_white));
-                break;
-            case BUTTON_FAVORITE:
                 mBinding.fabFavorite.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite)));
                 mBinding.fabFavorite.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.heart_red));
-
+                break;
+            case BUTTON_FAVORITE:
+                mBinding.fabFavorite.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+                mBinding.fabFavorite.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.heart_white));
                 break;
             default:
                 throw new UnsupportedOperationException("Unknow integer: " + favoriteValue);

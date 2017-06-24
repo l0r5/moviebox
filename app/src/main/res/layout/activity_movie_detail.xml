@@ -10,35 +10,35 @@
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:fitsSystemWindows="true">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar_movie_detail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleMarginStart="48dp"
                 app:expandedTitleMarginEnd="64dp"
-                android:fitsSystemWindows="true">
+                app:expandedTitleMarginStart="48dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <ImageView
                     android:id="@+id/backdrop_toolbar_image"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
-                    android:scaleType="centerCrop"
                     android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax" />
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar_movie_detail"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    app:layout_collapseMode="pin" />
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -50,10 +50,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:clickable="true"
-            app:layout_anchor="@id/app_bar_layout"
-            app:layout_anchorGravity="bottom|right|end"
             android:onClick="onClickFavorite"
-            android:scaleType="center"/>
+            android:scaleType="center"
+            app:layout_anchor="@id/app_bar_layout"
+            app:layout_anchorGravity="bottom|right|end" />
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -67,9 +67,11 @@
                 android:minHeight="3000dp"
                 android:orientation="vertical">
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standardMarginVerticalSpace"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -80,7 +82,8 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/image_description"
                         android:padding="@dimen/standardPadding"
-                        android:scaleType="centerCrop" />
+                        android:scaleType="centerCrop"
+                        android:layout_marginTop="@dimen/standardMarginVerticalSpace"/>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -93,88 +96,109 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="@dimen/textSizeCaption" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
                             android:layout_marginTop="@dimen/standardMarginVerticalSpace"
-                            android:textSize="@dimen/textSizeLarge" />
+                            android:text="@string/release_label"
+                            android:textSize="@dimen/textSizeLarge"
+                            android:textStyle="italic" />
 
                         <TextView
                             android:id="@+id/text_view_movie_detail_release_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:layout_marginTop="@dimen/standardMarginVerticalSpace"
                             android:textSize="@dimen/textSizeMedium" />
 
                         <TextView
-                            android:id="@+id/text_view_movie_detail_rating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:layout_marginTop="@dimen/standardMarginVerticalSpace"
-                            android:textSize="@dimen/textSizeSmall" />
-                    </LinearLayout>
+                            android:text="@string/rating_label"
+                            android:textSize="@dimen/textSizeLarge"
+                            android:textStyle="italic" />
 
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/text_view_movie_detail_rating"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textSize="@dimen/textSizeMedium"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/standardMarginHorizontalSpace"
+                                android:layout_marginStart="@dimen/standardMarginHorizontalSpace"
+                                android:text="@string/rating_label_10"
+                                android:textSize="@dimen/textSizeSmall" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/text_view_movie_detail_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/standardPadding"
+                    android:textSize="@dimen/textSizeMedium"
+                    android:textStyle="italic"
+                    />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/standardPadding">
-
-                    <TextView
-                        android:id="@+id/text_view_movie_detail_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/standardPadding"
-                        android:textSize="@dimen/textSizeMedium" />
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/spaceLineHeight"
-                        android:background="@color/colorGrey"
-                        android:padding="@dimen/standardPadding" />
+                    android:padding="@dimen/smallPadding"
+                    android:background="@color/lightGrey">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/standardPadding"
-                        android:textSize="@dimen/textSizeLarge"
                         android:text="@string/trailers_label"
-                        />
+                        android:textSize="@dimen/textSizeLarge"
+                        android:layout_marginTop="@dimen/smallMarginVerticalSpace"
+                        android:background="@drawable/card"/>
 
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_trailer_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/standardPadding"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/spaceLineHeight"
-                        android:background="@color/colorGrey"
+                        android:background="@color/colorWhite"
                         android:padding="@dimen/standardPadding" />
+
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/standardPadding"
-                        android:textSize="@dimen/textSizeLarge"
                         android:text="@string/reviews_label"
-                        />
+                        android:textSize="@dimen/textSizeLarge"
+                        android:layout_marginTop="@dimen/standardMarginHorizontalSpace"
+                        android:background="@drawable/card"/>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_review_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/standardPadding"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/spaceLineHeight"
-                        android:background="@color/colorGrey"
-                        android:padding="@dimen/standardPadding" />
+                        android:padding="@dimen/standardPadding"
+                        android:background="@drawable/card"/>
 
                 </LinearLayout>
 
