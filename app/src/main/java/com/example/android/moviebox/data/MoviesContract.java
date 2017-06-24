@@ -30,6 +30,7 @@ public class MoviesContract {
         public static final String COLUMN_TOP_RATED = "top_rated";
         public static final String COLUMN_POPULAR = "popular";
         public static final String COLUMN_THUMBNAIL_URL = "thumbnail_url";
+        public static final String COLUMN_POSTER_URL = "poster_url";
 
     }
 }

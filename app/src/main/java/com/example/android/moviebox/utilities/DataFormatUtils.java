@@ -45,6 +45,7 @@ public final class DataFormatUtils {
             String id;
             String title;
             String posterPath;
+            URL thumbnailUrl;
             URL posterUrl;
             String releaseDate;
             String rating;
@@ -57,13 +58,14 @@ public final class DataFormatUtils {
             title = results.getString(TMDB_TITLE);
             posterPath = results.getString(TMDB_POSTER_PATH);
             posterPath = posterPath.substring(1);
-            posterUrl = NetworkUtils.buildThumbnailUrl(posterPath);
+            thumbnailUrl = NetworkUtils.buildThumbnailUrl(posterPath);
+            posterUrl = NetworkUtils.buildPosterUrl(posterPath);
             releaseDate = results.getString(TMDB_RELEASE_DATE);
             rating = results.getString(TMDB_RATING);
             description = results.getString(TMDB_DESCRIPTION);
 
             // build movie object
-            Movie movie = new Movie(id, title, posterUrl, releaseDate, rating, description);
+            Movie movie = new Movie(id, title, thumbnailUrl, posterUrl, releaseDate, rating, description);
 
             parsedMovieData[i] = movie;
         }
@@ -194,6 +196,7 @@ public final class DataFormatUtils {
         movieValues.put(MoviesContract.MoviesEntry.COLUMN_TOP_RATED, movie.getTopRated());
         movieValues.put(MoviesContract.MoviesEntry.COLUMN_POPULAR, movie.getPopular());
         movieValues.put(MoviesContract.MoviesEntry.COLUMN_THUMBNAIL_URL, movie.getThumbnailUrlStr());
+        movieValues.put(MoviesContract.MoviesEntry.COLUMN_POSTER_URL, movie.getPosterUrlStr());
         return movieValues;
     }
 
@@ -211,19 +214,19 @@ public final class DataFormatUtils {
     /**
      * Builds Movie Object from Cursor
      */
-    public static Movie getMovieFromCursor(Cursor cursor) {
-        return new Movie(
-                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID)),
-                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TITLE)),
-                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_THUMBNAIL_URL)),
-                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE)),
-                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RATING)),
-                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION)),
-                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_FAVORITE)),
-                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TOP_RATED)),
-                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POPULAR))
-        );
-    }
+//    public static Movie getMovieFromCursor(Cursor cursor) {
+//        return new Movie(
+//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID)),
+//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TITLE)),
+//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_THUMBNAIL_URL)),
+//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE)),
+//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RATING)),
+//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION)),
+//                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_FAVORITE)),
+//                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TOP_RATED)),
+//                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POPULAR))
+//        );
+//    }
 
     /**
      * Builds Movie Array Object from Cursor
@@ -237,6 +240,7 @@ public final class DataFormatUtils {
                     cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID)),
                     cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TITLE)),
                     cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_THUMBNAIL_URL)),
+                    cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POSTER_URL)),
                     cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE)),
                     cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RATING)),
                     cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION)),
@@ -248,4 +252,5 @@ public final class DataFormatUtils {
         }
         return movieData;
     }
+
 }

@@ -26,7 +26,8 @@ public final class NetworkUtils {
     private static final String TOP_RATED_PATH ="top_rated";
     private static final String API_KEY_PARAM = "api_key";
     private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p";
-    private static final String IMAGE_SIZE_PATH = "w185";
+    private static final String IMAGE_SIZE_THUMBNAIL_PATH = "w185";
+    private static final String IMAGE_SIZE_POSTER_PATH = "original";
     private static final String VIDEOS_PATH = "videos";
     private static final String REVIEWS_PATH = "reviews";
     private static final String YOUTUBE_BASE_URL = "https://www.youtube.com";
@@ -72,7 +73,7 @@ public final class NetworkUtils {
         URL url = null;
 
         Uri builtUri = Uri.parse(IMAGE_BASE_URL).buildUpon()
-                .appendPath(IMAGE_SIZE_PATH)
+                .appendPath(IMAGE_SIZE_THUMBNAIL_PATH)
                 .appendPath(imagePath)
                 .build();
 
@@ -84,6 +85,25 @@ public final class NetworkUtils {
 
         return url;
     }
+
+    public static URL buildPosterUrl(String imagePath) {
+
+        URL url = null;
+
+        Uri builtUri = Uri.parse(IMAGE_BASE_URL).buildUpon()
+                .appendPath(IMAGE_SIZE_POSTER_PATH)
+                .appendPath(imagePath)
+                .build();
+
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
 
     public static URL buildTrailerUrl(Context context, String movieId) {
 

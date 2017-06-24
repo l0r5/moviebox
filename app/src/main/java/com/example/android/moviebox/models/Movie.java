@@ -17,12 +17,14 @@ public class Movie implements Parcelable {
     private int mTopRated;
     private int mPopular;
     private String mThumbnailUrlStr;
+    private String mPosterUrlStr;
 
 
-    public Movie(String id, String title, URL thumbnailUrl, String releaseDate, String rating, String description) {
+    public Movie(String id, String title, URL thumbnailUrl, URL posterUrl, String releaseDate, String rating, String description) {
         mId = id;
         mTitle = title;
         mThumbnailUrlStr = thumbnailUrl.toString();
+        mPosterUrlStr = posterUrl.toString();
         mReleaseDate = releaseDate;
         mRating = rating;
         mDescription = description;
@@ -31,10 +33,11 @@ public class Movie implements Parcelable {
         mPopular = 0;
     }
 
-    public Movie(String id, String title, String thumbnailUrl, String releaseDate, String rating, String description, int favorite, int topRated, int popular) {
+    public Movie(String id, String title, String thumbnailUrl, String posterUrl, String releaseDate, String rating, String description, int favorite, int topRated, int popular) {
         mId = id;
         mTitle = title;
         mThumbnailUrlStr = thumbnailUrl;
+        mPosterUrlStr = posterUrl;
         mReleaseDate = releaseDate;
         mRating = rating;
         mDescription = description;
@@ -57,6 +60,10 @@ public class Movie implements Parcelable {
 
     public String getThumbnailUrlStr() {
         return mThumbnailUrlStr;
+    }
+
+    public String getPosterUrlStr() {
+        return mPosterUrlStr;
     }
 
     public String getReleaseDate() {
@@ -113,6 +120,7 @@ public class Movie implements Parcelable {
         mId = in.readString();
         mTitle = in.readString();
         mThumbnailUrlStr = in.readString();
+        mPosterUrlStr = in.readString();
         mReleaseDate = in.readString();
         mRating = in.readString();
         mDescription = in.readString();
@@ -131,6 +139,7 @@ public class Movie implements Parcelable {
         out.writeString(mId);
         out.writeString(mTitle);
         out.writeString(mThumbnailUrlStr);
+        out.writeString(mPosterUrlStr);
         out.writeString(mReleaseDate);
         out.writeString(mRating);
         out.writeString(mDescription);

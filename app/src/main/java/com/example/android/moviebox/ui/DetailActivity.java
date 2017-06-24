@@ -22,10 +22,13 @@ import com.example.android.moviebox.databinding.ActivityMovieDetailBinding;
 import com.example.android.moviebox.models.Movie;
 import com.example.android.moviebox.models.Review;
 import com.example.android.moviebox.models.Trailer;
+import com.example.android.moviebox.utilities.DataFormatUtils;
 import com.example.android.moviebox.utilities.FetchMovieTrailerTask;
 import com.example.android.moviebox.utilities.DbTaskHandler;
 import com.example.android.moviebox.utilities.FetchMovieReviewTask;
 import com.squareup.picasso.Picasso;
+
+import java.net.MalformedURLException;
 
 public class DetailActivity extends MainActivity implements TrailerListAdapter.TrailerListAdapterOnClickHandler, FetchMovieTrailerTask.FetchMovieTrailerCallback, FetchMovieReviewTask.FetchMovieReviewCallback, DbTaskHandler.FetchMovieFromDbCallback {
 
@@ -61,11 +64,11 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // Set Collapsing Toolbar
-        Picasso.with(mBinding.imageViewDetailThumbnail.getContext()).load(mMovieDetails.getThumbnailUrlStr()).into(mBinding.backdropToolbarImage);
+        Picasso.with(mBinding.imageViewDetailThumbnail.getContext()).load(mMovieDetails.getPosterUrlStr()).into(mBinding.backdropToolbarImage);
         mBinding.collapsingToolbarMovieDetail.setTitle(mMovieDetails.getTitle());
         mBinding.collapsingToolbarMovieDetail.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
 
-        // Set Movie Details
+        // Set Content
         Picasso.with(mBinding.imageViewDetailThumbnail.getContext()).load(mMovieDetails.getThumbnailUrlStr()).into(mBinding.imageViewDetailThumbnail);
         mBinding.textViewMovieDetailTitle.setText(mMovieDetails.getTitle());
         mBinding.textViewMovieDetailReleaseDate.setText(mMovieDetails.getReleaseDate());
