@@ -44,6 +44,16 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:clickable="true"
+            app:layout_anchor="@id/app_bar_layout"
+            app:layout_anchorGravity="bottom|right|end"
+            android:onClick="onClickFavorite"
+            android:scaleType="center"/>
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -79,11 +89,20 @@
                         android:padding="@dimen/standardPadding">
 
                         <TextView
+                            android:id="@+id/text_view_movie_detail_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginTop="@dimen/standardMarginVerticalSpace"
+                            android:textSize="@dimen/textSizeLarge" />
+
+                        <TextView
                             android:id="@+id/text_view_movie_detail_release_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:textSize="@dimen/textSizeLarge" />
+                            android:layout_marginTop="@dimen/standardMarginVerticalSpace"
+                            android:textSize="@dimen/textSizeMedium" />
 
                         <TextView
                             android:id="@+id/text_view_movie_detail_rating"
@@ -92,16 +111,6 @@
                             android:layout_gravity="start"
                             android:layout_marginTop="@dimen/standardMarginVerticalSpace"
                             android:textSize="@dimen/textSizeSmall" />
-
-                        <Button
-                            android:id="@+id/button_movie_detail_favorite"
-                            android:layout_marginTop="@dimen/standardMarginVerticalSpace"
-                            android:layout_height="44dp"
-                            android:layout_width="44dp"
-                            android:background="@color/colorAccent"
-                            android:textColor="@color/colorWhite"
-                            android:onClick="onClickFavorite"
-                            />
                     </LinearLayout>
 
                 </LinearLayout>

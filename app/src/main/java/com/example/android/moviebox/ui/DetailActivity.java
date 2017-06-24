@@ -2,20 +2,17 @@ package com.example.android.moviebox.ui;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.LoaderManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -49,6 +46,7 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // set Databinding
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
 
         Intent intentThatStartedThisActivity = getIntent();
@@ -57,29 +55,30 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
             loadDetailData();
         }
 
+        // Switch toolbars
         setSupportActionBar(mBinding.toolbarMovieDetail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
+        // Set Collapsing Toolbar
         Picasso.with(mBinding.imageViewDetailThumbnail.getContext()).load(mMovieDetails.getThumbnailUrlStr()).into(mBinding.backdropToolbarImage);
         mBinding.collapsingToolbarMovieDetail.setTitle(mMovieDetails.getTitle());
         mBinding.collapsingToolbarMovieDetail.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
 
-
-
-
+        // Set Movie Details
         Picasso.with(mBinding.imageViewDetailThumbnail.getContext()).load(mMovieDetails.getThumbnailUrlStr()).into(mBinding.imageViewDetailThumbnail);
-        Log.i(TAG, "Thumbnail: " + mMovieDetails.getThumbnailUrlStr());
+        mBinding.textViewMovieDetailTitle.setText(mMovieDetails.getTitle());
         mBinding.textViewMovieDetailReleaseDate.setText(mMovieDetails.getReleaseDate());
         mBinding.textViewMovieDetailRating.setText(mMovieDetails.getRating());
         mBinding.textViewMovieDetailDescription.setText(mMovieDetails.getDescription());
-        setFavoriteButtonText();
+        setFavoriteButton();
 
+        // Set Trailer List
         mBinding.recyclerViewTrailerList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mTrailerListAdapter = new TrailerListAdapter(this);
         mBinding.recyclerViewTrailerList.setAdapter(mTrailerListAdapter);
 
+        // Set Review List
         mBinding.recyclerViewReviewList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mReviewListAdapter = new ReviewListAdapter();
         mBinding.recyclerViewReviewList.setAdapter(mReviewListAdapter);
@@ -145,14 +144,17 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         }
     }
 
-    private void setFavoriteButtonText() {
+    private void setFavoriteButton() {
         int favoriteValue = mMovieDetails.getFavorite();
         switch (favoriteValue) {
             case BUTTON_NOT_FAVORITE:
-                mBinding.buttonMovieDetailFavorite.setBackgroundResource(R.drawable.heart_outline);
+                mBinding.fabFavorite.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+                mBinding.fabFavorite.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.heart_white));
                 break;
             case BUTTON_FAVORITE:
-                mBinding.buttonMovieDetailFavorite.setBackgroundResource(R.drawable.heart);
+                mBinding.fabFavorite.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite)));
+                mBinding.fabFavorite.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.heart_red));
+
                 break;
             default:
                 throw new UnsupportedOperationException("Unknow integer: " + favoriteValue);
@@ -181,7 +183,7 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
             default:
                 throw new UnsupportedOperationException("Unknow integer: " + favoriteValue);
         }
-        setFavoriteButtonText();
+        setFavoriteButton();
         getContentResolver().update(uri, cv, MoviesContract.MoviesEntry.COLUMN_FAVORITE, null);
     }
 
