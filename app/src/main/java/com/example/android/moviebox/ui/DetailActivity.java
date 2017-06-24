@@ -3,13 +3,18 @@ package com.example.android.moviebox.ui;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
+
 import android.support.v4.app.LoaderManager;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -43,6 +48,7 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
 
         Intent intentThatStartedThisActivity = getIntent();
@@ -51,14 +57,20 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
             loadDetailData();
         }
 
-        if(mMovieDetails != null) {
-            setTitle(mMovieDetails.getTitle());
-        }
+        setSupportActionBar(mBinding.toolbarMovieDetail);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        mBinding.collapsingToolbarMovieDetailTitle.setTitle(mMovieDetails.getTitle());
-        mBinding.collapsingToolbarMovieDetailTitle.setExpandedTitleTextAppearance(R.style.ExpandedToolbar);
-        mBinding.collapsingToolbarMovieDetailTitle.setCollapsedTitleTextAppearance(R.style.CollapsedToolbar);
+
+        Picasso.with(mBinding.imageViewDetailThumbnail.getContext()).load(mMovieDetails.getThumbnailUrlStr()).into(mBinding.backdropToolbarImage);
+        mBinding.collapsingToolbarMovieDetail.setTitle(mMovieDetails.getTitle());
+        mBinding.collapsingToolbarMovieDetail.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
+
+
+
+
         Picasso.with(mBinding.imageViewDetailThumbnail.getContext()).load(mMovieDetails.getThumbnailUrlStr()).into(mBinding.imageViewDetailThumbnail);
+        Log.i(TAG, "Thumbnail: " + mMovieDetails.getThumbnailUrlStr());
         mBinding.textViewMovieDetailReleaseDate.setText(mMovieDetails.getReleaseDate());
         mBinding.textViewMovieDetailRating.setText(mMovieDetails.getRating());
         mBinding.textViewMovieDetailDescription.setText(mMovieDetails.getDescription());
@@ -94,19 +106,11 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         }
     }
 
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_popular:
-                return true;
-            case R.id.action_top_rated:
-                return true;
-            case R.id.action_favorite:
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.movie_detail_menu, menu);
+        return true;
     }
 
 
@@ -130,6 +134,7 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
             Log.e(TAG, "Review loading error");
         }
     }
+
 
     @Override
     public void onTrailerTaskCompleted(Trailer[] trailerData) {

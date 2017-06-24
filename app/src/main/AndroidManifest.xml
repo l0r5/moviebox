@@ -13,7 +13,8 @@
         android:theme="@style/AppTheme">
 
         <!--The manifest entry for MainActivity-->
-        <activity android:name=".ui.MainActivity"
+        <activity
+            android:name=".ui.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,8 +23,10 @@
         </activity>
 
         <!--The manifest entry for DetailActivity-->
-        <activity android:name=".ui.DetailActivity"
-                android:parentActivityName=".ui.MainActivity">
+        <activity
+            android:name=".ui.DetailActivity"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MainActivity" />
@@ -33,7 +36,7 @@
         <provider
             android:name=".data.MoviesProvider"
             android:authorities="@string/content_authority"
-            android:exported="false"/>
+            android:exported="false" />
 
         <!--The manifest entry for the SyncDbIntentService-->
         <service
@@ -46,7 +49,7 @@
             android:exported="false">
             <!-- COMPLETED (9) Declare an intent filter with the action ACTION_EXECUTE -->
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
 

@@ -8,18 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="CollapsedToolbar" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">@dimen/textSizeLarge</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:gravity">center_vertical</item>
-    </style>
-
-    <style name="ExpandedToolbar" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">@dimen/textSizeCaption</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:gravity">center_vertical</item>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 

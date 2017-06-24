@@ -8,7 +8,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -189,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.movielist_menu, menu);
+        inflater.inflate(R.menu.movie_list_menu, menu);
         return true;
     }
 
