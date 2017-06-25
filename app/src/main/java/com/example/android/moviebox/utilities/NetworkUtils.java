@@ -23,7 +23,7 @@ public final class NetworkUtils {
     private static final String THEMOVIEDB_BASE_URL = "http://api.themoviedb.org/3";
     private static final String MOVIE_PATH = "movie";
     private static final String POPULAR_PATH = "popular";
-    private static final String TOP_RATED_PATH ="top_rated";
+    private static final String TOP_RATED_PATH = "top_rated";
     private static final String API_KEY_PARAM = "api_key";
     private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p";
     private static final String IMAGE_SIZE_THUMBNAIL_PATH = "w185";
@@ -31,22 +31,22 @@ public final class NetworkUtils {
     private static final String VIDEOS_PATH = "videos";
     private static final String REVIEWS_PATH = "reviews";
     private static final String YOUTUBE_BASE_URL = "https://www.youtube.com";
-    private static final String YOUTUBE_WATCH_PATH ="watch";
+    private static final String YOUTUBE_WATCH_PATH = "watch";
     private static final String YOUTUBE_VIDEO_KEY_PARAM = "v";
 
-    public static URL buildUrl (Context context, String moviesChoice) {
+    public static URL buildUrl(Context context, String moviesChoice) {
 
         Uri builtUri = null;
         URL url = null;
         String apiKey = context.getString(R.string.THE_MOVIE_DB_API_KEY);
 
-        if(moviesChoice.equals(POPULAR_PATH)) {
+        if (moviesChoice.equals(POPULAR_PATH)) {
             builtUri = Uri.parse(THEMOVIEDB_BASE_URL).buildUpon()
                     .appendPath(MOVIE_PATH)
                     .appendPath(POPULAR_PATH)
                     .appendQueryParameter(API_KEY_PARAM, apiKey)
                     .build();
-        } else if(moviesChoice.equals(TOP_RATED_PATH)) {
+        } else if (moviesChoice.equals(TOP_RATED_PATH)) {
             builtUri = Uri.parse(THEMOVIEDB_BASE_URL).buildUpon()
                     .appendPath(MOVIE_PATH)
                     .appendPath(TOP_RATED_PATH)
@@ -55,8 +55,7 @@ public final class NetworkUtils {
         }
 
 
-
-        if(builtUri!=null) {
+        if (builtUri != null) {
             try {
                 url = new URL(builtUri.toString());
                 Log.v(TAG, "Built API URL: " + url);
@@ -117,7 +116,7 @@ public final class NetworkUtils {
                 .appendQueryParameter(API_KEY_PARAM, apiKey)
                 .build();
 
-        if(builtUri!=null) {
+        if (builtUri != null) {
             try {
                 url = new URL(builtUri.toString());
                 Log.v(TAG, "Built Movie Trailer URL: " + url);
@@ -140,7 +139,7 @@ public final class NetworkUtils {
                 .appendQueryParameter(API_KEY_PARAM, apiKey)
                 .build();
 
-        if(builtUri!=null) {
+        if (builtUri != null) {
             try {
                 url = new URL(builtUri.toString());
                 Log.v(TAG, "Built Movie Review URL: " + url);
@@ -159,7 +158,7 @@ public final class NetworkUtils {
                 .appendPath(YOUTUBE_WATCH_PATH)
                 .appendQueryParameter(YOUTUBE_VIDEO_KEY_PARAM, key)
                 .build();
-        if(builtUri!=null) {
+        if (builtUri != null) {
             try {
                 url = new URL(builtUri.toString());
                 Log.v(TAG, "Built YouTube URL: " + url);
@@ -173,6 +172,8 @@ public final class NetworkUtils {
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setConnectTimeout(5000);
+
         try {
             InputStream in = urlConnection.getInputStream();
 
@@ -180,7 +181,7 @@ public final class NetworkUtils {
             scanner.useDelimiter("\\A");
 
             boolean hasInput = scanner.hasNext();
-            if(hasInput) {
+            if (hasInput) {
                 return scanner.next();
             } else {
                 return null;
@@ -191,7 +192,7 @@ public final class NetworkUtils {
     }
 
     public static String getPath(String selectedMovies) {
-        switch(selectedMovies) {
+        switch (selectedMovies) {
             case POPULAR_MOVIES:
                 return POPULAR_PATH;
             case TOP_RATED_MOVIES:

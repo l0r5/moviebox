@@ -29,38 +29,41 @@ class SyncDbTask {
         Movie[] fetchedPopularMovies = SyncDbUtils.fetchMovies(context, NetworkUtils.getPath(POPULAR_MOVIES));
         Movie[] fetchedTopRatedMovies = SyncDbUtils.fetchMovies(context, NetworkUtils.getPath(TOP_RATED_MOVIES));
 
-        if (fetchedPopularMovies == null || fetchedTopRatedMovies == null) {
-            throw new NullPointerException("Movies couldn't be loaded");
+        if (fetchedPopularMovies == null || fetchedTopRatedMovies == null) { // if network connection fails, get data from db
+            // Get all persisted Movies from the Db
+            Cursor cursor = SyncDbUtils.getAllMoviesFromDb(context);
+            cursor.moveToFirst();
+            cursor.close();
+        } else { // else compare the two data sets
+
+            // Make one Movie Array out of the fetched single parts
+            Movie[] allFetchedMovies = Movie.concatMovies(fetchedPopularMovies, fetchedTopRatedMovies);
+
+            // Check if Db is empty -> if yes, fill in the fetched Data
+            if (SyncDbUtils.checkIfTableIsEmpty(context)) {
+                ContentValues[] contentValuesFetchedMovies = DataFormatUtils.getContentValuesArrayFromMovieArray(allFetchedMovies);
+                SyncDbUtils.fillEmptyTable(context, contentValuesFetchedMovies);
+                return;
+            }
+
+            // Get all persisted Movies from the Db
+            Cursor cursor = SyncDbUtils.getAllMoviesFromDb(context);
+            cursor.moveToFirst();
+            Movie[] allPersistedMovies = DataFormatUtils.getMoviesFromCursor(cursor);
+            cursor.close();
+
+            // Create Arraylists of the two data sets
+            ArrayList<Movie> persistedMoviesList = new ArrayList<Movie>(Arrays.asList(allPersistedMovies));
+            ArrayList<Movie> fetchedMoviesList = new ArrayList<Movie>(Arrays.asList(allFetchedMovies));
+
+            // check if there is new data
+            if (persistedMoviesList.containsAll(fetchedMoviesList)) {
+                Log.i(TAG, "The persisted Movie Data is up-to-date");
+            } else {
+                // Compate the two datasets and persist the new version to the db
+                updateDb(context, fetchedMoviesList);
+            }
         }
-
-        // Make one Movie Array out of the fetched single parts
-        Movie[] allFetchedMovies = Movie.concatMovies(fetchedPopularMovies, fetchedTopRatedMovies);
-
-        // Check if Db is empty -> if yes, fill in the fetched Data
-        if (SyncDbUtils.checkIfTableIsEmpty(context)) {
-            ContentValues[] contentValuesFetchedMovies = DataFormatUtils.getContentValuesArrayFromMovieArray(allFetchedMovies);
-            SyncDbUtils.fillEmptyTable(context, contentValuesFetchedMovies);
-            return;
-        }
-
-        // Get all persisted Movies from the Db
-        Cursor cursor = SyncDbUtils.getAllMoviesFromDb(context);
-        cursor.moveToFirst();
-        Movie[] allPersistedMovies = DataFormatUtils.getMoviesFromCursor(cursor);
-        cursor.close();
-
-        // Create Arraylists of the two data sets
-        ArrayList<Movie> persistedMoviesList = new ArrayList<Movie>(Arrays.asList(allPersistedMovies));
-        ArrayList<Movie> fetchedMoviesList = new ArrayList<Movie>(Arrays.asList(allFetchedMovies));
-
-        // check if there is new data
-        if (persistedMoviesList.containsAll(fetchedMoviesList)) {
-            Log.i(TAG, "The persisted Movie Data is up-to-date");
-        } else {
-            // Compate the two datasets and persist the new version to the db
-            updateDb(context, fetchedMoviesList);
-        }
-
     }
 
     private static void updateDb(Context context, ArrayList<Movie> fetchedMoviesList) {

@@ -96,7 +96,6 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         if (mMovieDetails != null) {
             outState.putParcelable(STATE_MOVIE_DETAILS_KEY, mMovieDetails);
         }
-
     }
 
     @Override
@@ -117,7 +116,6 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
 
 
     private void loadDetailData() {
-
         //load trailers
         LoaderManager.LoaderCallbacks<Trailer[]> trailerCallback = new FetchMovieTrailerTask(this, this, mMovieDetails.getId());
         getSupportLoaderManager().initLoader(FETCH_TRAILERS_LOADER_ID, null, trailerCallback);
@@ -125,7 +123,6 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         //loader reviews
         LoaderManager.LoaderCallbacks<Review[]> reviewCallback = new FetchMovieReviewTask(this, this, mMovieDetails.getId());
         getSupportLoaderManager().initLoader(FETCH_REVIEWS_LOADER_ID, null, reviewCallback);
-
     }
 
 
