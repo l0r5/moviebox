@@ -1,13 +1,17 @@
 package com.example.android.moviebox.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     public static final String STATE_MOVIES_KEY = "moviesKey";
     public static final String STATE_CATEGORY_KEY = "categoryKeyState";
     public static final String INTENT_MOVIE_DETAIL_KEY = "movieDetailKey";
-    public static final String INTENT_CATEGORY_KEY = "categoryKeyIntent";
+    public static final String SHARED_PREFERENCES_CATEGORY_KEY = "categoryKeySharedPreferences";
     private static final boolean LOADING_INDICATOR_ON = true;
     private static final boolean LOADING_INDICATOR_OFF = false;
     private MovieListAdapter mMovieListAdapter;
@@ -49,14 +53,9 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_list);
 
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mBinding.recyclerViewMovieList.setLayoutManager(new GridLayoutManager(this, 2));
+            mBinding.recyclerViewMovieList.setLayoutManager(new GridLayoutManager(this, calculateNoOfColumns()));
         } else {
-            mBinding.recyclerViewMovieList.setLayoutManager(new GridLayoutManager(this, 4));
-        }
-
-        if (savedInstanceState == null) {
-            mCategory = POPULAR_MOVIES;
-            setActivityTitle(mCategory);
+            mBinding.recyclerViewMovieList.setLayoutManager(new GridLayoutManager(this, calculateNoOfColumns()));
         }
 
         mBinding.recyclerViewMovieList.setHasFixedSize(true);
@@ -120,6 +119,11 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         ArrayList<Movie> categoryList = new ArrayList<>();
         Movie[] categoryMovies;
 
+        if(mCategory == null) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            mCategory = sharedPreferences.getString(SHARED_PREFERENCES_CATEGORY_KEY, POPULAR_MOVIES);
+        }
+
         switch (mCategory) {
             case POPULAR_MOVIES:
                 for (Movie movie : allMoviesList) {
@@ -155,6 +159,11 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 throw new UnsupportedOperationException("Unknow movies category: " + mCategory);
         }
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SHARED_PREFERENCES_CATEGORY_KEY, mCategory);
+        editor.commit();
+
         setActivityTitle(mCategory);
 
         // No favorites, yet
@@ -183,7 +192,13 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
     }
 
-
+    private int calculateNoOfColumns() {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 180;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        return noOfColumns;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -247,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         toggleLoadingIndicator(LOADING_INDICATOR_OFF);
         if (movieData != null) {
             mMovies = movieData;
-            mMovieListAdapter.setMovieData(movieData);
+            selectMoviesForCategory();
         } else {
             showErrorMessage();
         }
