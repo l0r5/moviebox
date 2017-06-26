@@ -77,12 +77,12 @@ public class DetailActivity extends MainActivity implements TrailerListAdapter.T
         setFavoriteButton();
 
         // Set Trailer List
-        mBinding.recyclerViewTrailerList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mBinding.recyclerViewTrailerList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mTrailerListAdapter = new TrailerListAdapter(this);
         mBinding.recyclerViewTrailerList.setAdapter(mTrailerListAdapter);
 
         // Set Review List
-        mBinding.recyclerViewReviewList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mBinding.recyclerViewReviewList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mReviewListAdapter = new ReviewListAdapter();
         mBinding.recyclerViewReviewList.setAdapter(mReviewListAdapter);
 

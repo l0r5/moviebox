@@ -1,34 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/image_view_play_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        app:srcCompat="@android:drawable/ic_media_play"
-        android:layout_marginTop="@dimen/standardMarginHorizontalSpace"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_trailer"
-        app:layout_constraintBottom_toTopOf="@+id/text_view_trailer"
-        android:layout_marginLeft="@dimen/standardMarginHorizontalSpace"
-        android:layout_marginStart="@dimen/standardMarginHorizontalSpace"
-        />
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:layout_height="180dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp">
 
-    <TextView
-        android:id="@+id/text_view_trailer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/standardPadding"
-        android:textSize="@dimen/textSizeMedium"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/smallMarginVerticalSpace"
-        app:layout_constraintLeft_toRightOf="@+id/image_view_play_icon"
-        android:layout_marginLeft="@dimen/standardMarginHorizontalSpace"
-        android:layout_marginStart="@dimen/standardMarginHorizontalSpace"
-        android:layout_marginRight="@dimen/standardMarginHorizontalSpace"
-        />
+        <ImageView
+            android:id="@+id/image_view_trailer_thumbnail"
+            android:layout_width="250dp"
+            android:layout_height="180dp"
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY" />
 
-</android.support.constraint.ConstraintLayout>
+        <ImageView
+            android:id="@+id/image_view_play_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:srcCompat="@android:drawable/ic_media_play" />
+    </RelativeLayout>
+
+</LinearLayout>

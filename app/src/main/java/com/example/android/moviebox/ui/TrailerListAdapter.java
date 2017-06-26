@@ -5,10 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.moviebox.R;
 import com.example.android.moviebox.models.Trailer;
+import com.squareup.picasso.Picasso;
 
 
 public class TrailerListAdapter extends RecyclerView.Adapter <TrailerListAdapter.TrailerListAdapterViewHolder>{
@@ -27,11 +29,11 @@ public class TrailerListAdapter extends RecyclerView.Adapter <TrailerListAdapter
 
     public class TrailerListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final TextView mTrailerDataTextView;
+        private final ImageView mTrailerDataThumbnail;
 
         public TrailerListAdapterViewHolder(View view) {
             super(view);
-            mTrailerDataTextView = (TextView) view.findViewById(R.id.text_view_trailer);
+            mTrailerDataThumbnail = (ImageView) view.findViewById(R.id.image_view_trailer_thumbnail);
             view.setOnClickListener(this);
         }
 
@@ -55,8 +57,12 @@ public class TrailerListAdapter extends RecyclerView.Adapter <TrailerListAdapter
 
     @Override
     public void onBindViewHolder(TrailerListAdapterViewHolder holder, int position) {
-        String trailerLink = mTrailerData[position].getName();
-        holder.mTrailerDataTextView.setText(trailerLink);
+        String youtubeKey = mTrailerData[position].getKey();
+        String youtubeThumbnailUrl = getYoutubeThumbnailUrl(youtubeKey);
+
+        Picasso.with(holder.mTrailerDataThumbnail.getContext())
+                .load(youtubeThumbnailUrl)
+                .into(holder.mTrailerDataThumbnail);
     }
 
     @Override
@@ -70,6 +76,7 @@ public class TrailerListAdapter extends RecyclerView.Adapter <TrailerListAdapter
         notifyDataSetChanged();
     }
 
-
-
+    private String getYoutubeThumbnailUrl(String key) {
+        return "http://img.youtube.com/vi/" + key + "/0.jpg";
+    }
 }

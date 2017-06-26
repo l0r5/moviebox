@@ -210,24 +210,6 @@ public final class DataFormatUtils {
         return moviesContentValues;
     }
 
-
-    /**
-     * Builds Movie Object from Cursor
-     */
-//    public static Movie getMovieFromCursor(Cursor cursor) {
-//        return new Movie(
-//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID)),
-//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TITLE)),
-//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_THUMBNAIL_URL)),
-//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE)),
-//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RATING)),
-//                cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION)),
-//                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_FAVORITE)),
-//                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TOP_RATED)),
-//                cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POPULAR))
-//        );
-//    }
-
     /**
      * Builds Movie Array Object from Cursor
      */

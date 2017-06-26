@@ -57,14 +57,13 @@
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="fill_vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="3000dp"
                 android:orientation="vertical">
 
 
@@ -79,11 +78,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="250dp"
                         android:layout_gravity="start"
+                        android:layout_marginTop="@dimen/standardMarginVerticalSpace"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/image_description"
                         android:padding="@dimen/standardPadding"
-                        android:scaleType="centerCrop"
-                        android:layout_marginTop="@dimen/standardMarginVerticalSpace"/>
+                        android:scaleType="centerCrop" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -156,24 +155,23 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/standardPadding"
                     android:textSize="@dimen/textSizeMedium"
-                    android:textStyle="italic"
-                    />
+                    android:textStyle="italic" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/lightGrey"
                     android:orientation="vertical"
-                    android:padding="@dimen/smallPadding"
-                    android:background="@color/lightGrey">
+                    android:padding="@dimen/smallPadding">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/smallMarginVerticalSpace"
+                        android:background="@drawable/card"
                         android:padding="@dimen/standardPadding"
                         android:text="@string/trailers_label"
-                        android:textSize="@dimen/textSizeLarge"
-                        android:layout_marginTop="@dimen/smallMarginVerticalSpace"
-                        android:background="@drawable/card"/>
+                        android:textSize="@dimen/textSizeLarge" />
 
 
                     <android.support.v7.widget.RecyclerView
@@ -183,22 +181,47 @@
                         android:background="@color/colorWhite"
                         android:padding="@dimen/standardPadding" />
 
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@color/colorWhite"
+                        android:paddingBottom="@dimen/largePadding"
+                        android:src="@drawable/gesture_swipe_right" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/lightGrey"
+                    android:orientation="vertical"
+                    android:padding="@dimen/smallPadding">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/standardMarginHorizontalSpace"
+                        android:background="@drawable/card"
                         android:padding="@dimen/standardPadding"
                         android:text="@string/reviews_label"
-                        android:textSize="@dimen/textSizeLarge"
-                        android:layout_marginTop="@dimen/standardMarginHorizontalSpace"
-                        android:background="@drawable/card"/>
+                        android:textSize="@dimen/textSizeLarge" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_review_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
                         android:padding="@dimen/standardPadding"
-                        android:background="@drawable/card"/>
+                        android:paddingBottom="@dimen/largePadding" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@color/colorWhite"
+                        android:paddingBottom="@dimen/largePadding"
+                        android:src="@drawable/gesture_swipe_right" />
 
                 </LinearLayout>
 

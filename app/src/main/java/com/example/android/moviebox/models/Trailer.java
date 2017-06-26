@@ -32,6 +32,10 @@ public class Trailer {
         return mId;
     }
 
+    public String getKey() {
+        return mKey;
+    }
+
     public URL getYoutubeUrl() {
         return mYoutubeUrl;
     }

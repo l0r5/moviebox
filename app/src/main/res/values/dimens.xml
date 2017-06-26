@@ -8,6 +8,7 @@
     <dimen name="smallMarginVerticalSpace">6dp</dimen>
     <dimen name="standardPadding">12dp</dimen>
     <dimen name="smallPadding">6dp</dimen>
+    <dimen name="largePadding">20dp</dimen>
     <dimen name="loadingIndicatorSize">42dp</dimen>
     <dimen name="spaceLineHeight">2dp</dimen>
 
